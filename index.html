@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>浪浪故事輪播牆｜等一個不放開的家</title>
+  <style>
+    :root {
+      /* 主色系設定：溫暖奶油米白 + 暖橘棕，非常適合嵌入 Notion 淺色模式 */
+      --bg-color: #faf7f2;
+      --card-bg: #ffffff;
+      --primary: #e07a5f;       /* 暖磚橘 */
+      --primary-hover: #d06549;
+      --secondary: #f2cc8f;     /* 暖鵝黃 */
+      --text-main: #3d405b;     /* 深藍灰字體，柔和不刺眼 */
+      --text-muted: #7a7d90;
+      --tag-bg: #f4ece1;
+      --shadow: 0 10px 25px rgba(61, 64, 91, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+
+    /* 頂部個性篩選列 */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .filter-btn {
+      background: var(--card-bg);
+      border: 1.5px solid #e6dfd5;
+      color: var(--text-main);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(224, 122, 95, 0.3);
+    }
+
+    /* 輪播主容器 */
+    .carousel-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 左右切換箭頭 */
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid #e6dfd5;
+      color: var(--text-main);
+      font-size: 16px;
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .nav-prev { left: -12px; }
+    .nav-next { right: -12px; }
+
+    /* 3D 翻轉卡片容器 */
+    .card-scene {
+      width: 100%;
+      height: 490px;
+      perspective: 1000px;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.65s cubic-bezier(0.4, 0.2, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .card-inner.is-flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      border: 1px solid #efe9e0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 卡片正面 */
+    .card-front .img-box {
+      position: relative;
+      width: 100%;
+      height: 230px;
+      background: #eee;
+    }
+
+    .card-front .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .location-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(61, 64, 91, 0.82);
+      color: #fff;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+    }
+
+    .flip-trigger-badge {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.92);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--primary);
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+      transition: transform 0.2s;
+    }
+
+    .flip-trigger-badge:hover {
+      transform: scale(1.05);
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .card-body {
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .dog-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .dog-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .dog-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      color: #8c6239;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 8px;
+    }
+
+    .catchphrase {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-main);
+      background: #fdfbf7;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border-left: 3px solid var(--secondary);
+      margin-bottom: 12px;
+    }
+
+    /* 雲端摸頭 & 送罐罐互動區 */
+    .interact-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .action-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: none;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.2s;
+      user-select: none;
+    }
+
+    .action-btn:active {
+      transform: scale(0.93);
+    }
+
+    .btn-pet {
+      background: #ffe8e2;
+      color: #c95236;
+    }
+
+    .btn-pet:hover { background: #ffd8ce; }
+
+    .btn-treat {
+      background: #fff3d6;
+      color: #b57c14;
+    }
+
+    .btn-treat:hover { background: #ffe8b3; }
+
+    /* 卡片背面（心聲與官方外連） */
+    .card-back {
+      transform: rotateY(180deg);
+      padding: 22px;
+      justify-content: space-between;
+      background: linear-gradient(180deg, #fffcf7 0%, #ffffff 100%);
+    }
+
+    .back-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed #e0d6c8;
+      padding-bottom: 12px;
+    }
+
+    .back-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .back-close-btn {
+      background: #f2ece4;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .back-close-btn:hover { background: #e5dccf; }
+
+    .story-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 4px;
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text-main);
+      white-space: pre-line;
+    }
+
+    .shelter-info {
+      background: var(--tag-bg);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      color: #6b533b;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .official-link-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: var(--primary);
+      color: #fff;
+      text-decoration: none;
+      padding: 12px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(224, 122, 95, 0.35);
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .official-link-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    /* 底部圓點指示器 */
+    .dots-container {
+      display: flex;
+      gap: 7px;
+      margin-top: 14px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #d8cfc4;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .dot.active {
+      width: 22px;
+      border-radius: 6px;
+      background: var(--primary);
+    }
+
+    /* 飄浮愛心與罐頭動畫 */
+    .floating-emoji {
+      position: fixed;
+      pointer-events: none;
+      font-size: 22px;
+      z-index: 9999;
+      animation: floatUp 1.1s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(0.7) rotate(0deg);
+      }
+      50% {
+        opacity: 1;
+        transform: translate(calc(-50% + var(--drift)), -45px) scale(1.2) rotate(var(--rot));
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--drift)), -95px) scale(0.9) rotate(var(--rot));
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 個性篩選標籤列 -->
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-filter="all">🐾 全部浪浪</button>
+    <button class="filter-btn" data-filter="親人撒嬌">🥰 親人撒嬌</button>
+    <button class="filter-btn" data-filter="穩重乖巧">🐶 穩重乖巧</button>
+    <button class="filter-btn" data-filter="活力滿滿">⚡ 活力滿滿</button>
+  </div>
+
+  <!-- 輪播卡片區 -->
+  <div class="carousel-wrapper" id="carouselWrapper">
+    <button class="nav-btn nav-prev" id="prevBtn" title="上一隻">❮</button>
+    
+    <div class="card-scene">
+      <div class="card-inner" id="cardInner">
+        <!-- 卡片正面 -->
+        <div class="card-face card-front">
+          <div class="img-box">
+            <span class="location-badge" id="dogLocation">📍 雲林縣</span>
+            <img id="dogImage" src="" alt="狗狗照片" />
+            <button class="flip-trigger-badge" id="flipToBackBtn">💌 聽聽牠的心聲</button>
+          </div>
+          <div class="card-body">
+            <div>
+              <div class="dog-header">
+                <span class="dog-name" id="dogName">小黃</span>
+                <span class="dog-meta" id="dogMeta">男生・中型犬・已結紮</span>
+              </div>
+              <div class="tags-row" id="dogTags"></div>
+              <div class="catchphrase" id="dogQuote">
+                「我每天都在籠子前面等，只要你願意停下來看我一眼，我就會對你搖尾巴！」
+              </div>
+            </div>
+
+            <!-- 雲端摸頭與送罐罐 -->
+            <div class="interact-row">
+              <button class="action-btn btn-pet" id="petBtn">
+                🐾 雲端摸頭 <span id="petCount">12</span>
+              </button>
+              <button class="action-btn btn-treat" id="treatBtn">
+                🥫 送罐罐 <span id="treatCount">8</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 卡片背面 -->
+        <div class="card-face card-back">
+          <div>
+            <div class="back-header">
+              <span class="back-title" id="backTitle">💌 小黃的悄悄話</span>
+              <button class="back-close-btn" id="flipToFrontBtn">↩ 返回照片</button>
+            </div>
+            <div class="story-content" id="dogStory"></div>
+          </div>
+
+          <div>
+            <div class="shelter-info" id="shelterInfo"></div>
+            <a href="#" target="_blank" rel="noopener noreferrer" class="official-link-btn" id="officialLink">
+              前往收容管理系統看詳細資料 ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="nav-btn nav-next" id="nextBtn" title="下一隻">❯</button>
+  </div>
+
+  <!-- 底部圓點 -->
+  <div class="dots-container" id="dotsContainer"></div>
+
+  <script>
+    // =========================================================================
+    // 🐶【狗狗名單編輯區】未來想新增或修改狗狗，只要改這個陣列裡面的文字就好！
+    // =========================================================================
+    const DOGS_DATA = [
+      {
+        id: "dog_01", // 每隻狗請給一個不重複的代號（用來記憶摸頭與罐罐數量）
+        name: "阿福",
+        location: "雲林縣",
+        meta: "男生・中型米克斯・已絕育",
+        category: "親人撒嬌", // 對應上方的篩選按鈕：親人撒嬌 / 穩重乖巧 / 活力滿滿
+        tags: ["超級愛笑", "會坐下握手", "不護食"],
+        image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", // 換成收容所狗狗照片網址
+        quote: "「志工姊姊說我笑起來像太陽，希望有一天能成為你家專屬的小太陽！」",
+        story: "嗨！我是阿福，來到這裡已經快半年了。\n\n剛進來的時候我很害怕，每天都縮在角落發抖。後來志工常常來跟我說話、摸摸我的頭，我才發現原來人類的手這麼溫暖。\n\n我散步不會暴衝，也很喜歡靠在人腳邊討摸摸，如果你願意給我一個家，我一定會用一輩子陪著你。",
+        shelterName: "雲林縣流浪動物收容所（收容編號：113081502）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt", // 換成該隻狗狗在收容系統的專屬網址
+        initialPets: 24,
+        initialTreat: 15
+      },
+      {
+        id: "dog_02",
+        name: "黑糖",
+        location: "臺中市",
+        meta: "女生・中大型歐告・已絕育",
+        category: "穩重乖巧",
+        tags: ["居家守護神", "定點大小便", "安靜不亂叫"],
+        image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80",
+        quote: "「雖然我全身黑嚕嚕的，在暗處看不太見，但我有一顆最亮、最忠心的心喔！」",
+        story: "大家好，我是黑糖。很多人經過籠子時，常常因為我是黑狗就走過去了，其實我真的很乖。\n\n我不會亂吠叫，也不會拆家，最喜歡安安靜靜趴在旁邊看你工作或看書。如果你喜歡安靜陪伴的感覺，我會是最棒的室友。",
+        shelterName: "臺中市動物之家后里園區（收容編號：113090211）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt",
+        initialPets: 31,
+        initialTreat: 19
+      },
+      {
+        id: "dog_03",
+        name: "麻糬",
+        location: "高雄市",
+        meta: "女生・小型混種犬・幼犬",
+        category: "活力滿滿",
+        tags: ["好奇寶寶", "喜歡玩球", "親狗也親人"],
+        image: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80",
+        quote: "「世界這麼大，好想跟你一起去公園草地奔跑、聞聞每一朵小花！」",
+        story: "汪！我是麻糬，今年還沒滿一歲喔！\n\n我對什麼事都充滿好奇，看到球球就會開心得跳起來。雖然現在還在學習規矩，但我很聰明，只要有零食獎勵，我很快就能學會喔！快帶我回家一起長大吧！",
+        shelterName: "高雄市燕巢動物保護關愛園區（收容編號：113101205）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt",
+        initialPets: 42,
+        initialTreat: 28
+      }
+    ];
+    // =========================================================================
+
+    let currentFilter = "all";
+    let filteredDogs = [...DOGS_DATA];
+    let currentIndex = 0;
+    let isFlipped = false;
+    let autoPlayTimer = null;
+
+    // 讀取或初始化本地按讚紀錄
+    const savedCounts = JSON.parse(localStorage.getItem("dog_carousel_counts") || "{}");
+
+    function getCounts(dog) {
+      if (!savedCounts[dog.id]) {
+        savedCounts[dog.id] = { pets: dog.initialPets, treats: dog.initialTreat };
+      }
+      return savedCounts[dog.id];
+    }
+
+    function saveCounts() {
+      localStorage.setItem("dog_carousel_counts", JSON.stringify(savedCounts));
+    }
+
+    // DOM 元素
+    const cardInner = document.getElementById("cardInner");
+    const dogLocation = document.getElementById("dogLocation");
+    const dogImage = document.getElementById("dogImage");
+    const dogName = document.getElementById("dogName");
+    const dogMeta = document.getElementById("dogMeta");
+    const dogTags = document.getElementById("dogTags");
+    const dogQuote = document.getElementById("dogQuote");
+    const petCount = document.getElementById("petCount");
+    const treatCount = document.getElementById("treatCount");
+    const backTitle = document.getElementById("backTitle");
+    const dogStory = document.getElementById("dogStory");
+    const shelterInfo = document.getElementById("shelterInfo");
+    const officialLink = document.getElementById("officialLink");
+    const dotsContainer = document.getElementById("dotsContainer");
+
+    // 渲染目前狗狗卡片
+    function renderCard() {
+      if (filteredDogs.length === 0) return;
+      const dog = filteredDogs[currentIndex];
+      const counts = getCounts(dog);
+
+      // 切換狗狗時先翻回正面
+      if (isFlipped) {
+        isFlipped = false;
+        cardInner.classList.remove("is-flipped");
+      }
+
+      dogLocation.textContent = `📍 ${dog.location}`;
+      dogImage.src = dog.image;
+      dogName.textContent = dog.name;
+      dogMeta.textContent = dog.meta;
+      dogQuote.textContent = dog.quote;
+
+      // 標籤
+      dogTags.innerHTML = dog.tags.map(t => `<span class="tag">#${t}</span>`).join("");
+
+      // 互動數字
+      petCount.textContent = counts.pets;
+      treatCount.textContent = counts.treats;
+
+      // 背面資料
+      backTitle.textContent = `💌 ${dog.name}的悄悄話`;
+      dogStory.textContent = dog.story;
+      shelterInfo.textContent = `🏠 所在位置：${dog.shelterName}`;
+      officialLink.href = dog.officialUrl;
+
+      renderDots();
+    }
+
+    // 渲染底部圓點
+    function renderDots() {
+      dotsContainer.innerHTML = "";
+      filteredDogs.forEach((_, idx) => {
+        const dot = document.createElement("div");
+        dot.className = `dot ${idx === currentIndex ? "active" : ""}`;
+        dot.addEventListener("click", () => {
+          currentIndex = idx;
+          renderCard();
+        });
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    // 飄浮愛心 / 罐罐動畫產生器
+    function spawnFloatingEmojis(btnElement, emojis) {
+      const rect = btnElement.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const topY = rect.top;
+
+      for (let i = 0; i < 4; i++) {
+        const span = document.createElement("span");
+        span.className = "floating-emoji";
+        span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        
+        // 隨機水平偏移與旋轉角度
+        const drift = (Math.random() - 0.5) * 70 + "px";
+        const rot = (Math.random() - 0.5) * 40 + "deg";
+        span.style.setProperty("--drift", drift);
+        span.style.setProperty("--rot", rot);
+        span.style.left = (centerX + (Math.random() - 0.5) * 30) + "px";
+        span.style.top = topY + "px";
+        span.style.animationDelay = (i * 0.08) + "s";
+
+        document.body.appendChild(span);
+        setTimeout(() => span.remove(), 1200);
+      }
+    }
+
+    // 按鈕事件：雲端摸頭
+    document.getElementById("petBtn").addEventListener("click", function () {
+      const dog = filteredDogs[currentIndex];
+      const counts = getCounts(dog);
+      counts.pets += 1;
+      petCount.textContent = counts.pets;
+      saveCounts();
+      spawnFloatingEmojis(this, ["❤️", "🐾", "🥰", "💕"]);
+    });
+
+    // 按鈕事件：送罐罐
+    document.getElementById("treatBtn").addEventListener("click", function () {
+      const dog = filteredDogs[currentIndex];
+      const counts = getCounts(dog);
+      counts.treats += 1;
+      treatCount.textContent = counts.treats;
+      saveCounts();
+      spawnFloatingEmojis(this, ["🥫", "🍖", "✨", "❤️"]);
+    });
+
+    // 翻轉卡片控制
+    document.getElementById("flipToBackBtn").addEventListener("click", () => {
+      isFlipped = true;
+      cardInner.classList.add("is-flipped");
+    });
+
+    document.getElementById("flipToFrontBtn").addEventListener("click", () => {
+      isFlipped = false;
+      cardInner.classList.remove("is-flipped");
+    });
+
+    // 上一隻 / 下一隻
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % filteredDogs.length;
+      renderCard();
+    }
+
+    function prevSlide() {
+      currentIndex = (currentIndex - 1 + filteredDogs.length) % filteredDogs.length;
+      renderCard();
+    }
+
+    document.getElementById("nextBtn").addEventListener("click", nextSlide);
+    document.getElementById("prevBtn").addEventListener("click", prevSlide);
+
+    // 篩選按鈕事件
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        
+        currentFilter = btn.dataset.filter;
+        filteredDogs = currentFilter === "all" 
+          ? [...DOGS_DATA] 
+          : DOGS_DATA.filter(d => d.category === currentFilter);
+        
+        currentIndex = 0;
+        renderCard();
+      });
+    });
+
+    // 自動輪播控制（滑鼠懸停或卡片翻到背面時暫停輪播）
+    function startAutoPlay() {
+      stopAutoPlay();
+      autoPlayTimer = setInterval(() => {
+        if (!isFlipped && filteredDogs.length > 1) {
+          nextSlide();
+        }
+      }, 5000); // 每 5 秒自動切換一隻
+    }
+
+    function stopAutoPlay() {
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
+    }
+
+    const wrapper = document.getElementById("carouselWrapper");
+    wrapper.addEventListener("mouseenter", stopAutoPlay);
+    wrapper.addEventListener("mouseleave", startAutoPlay);
+
+    // 初始化
+    renderCard();
+    startAutoPlay();
+  </script>
+</body>
+</html>
