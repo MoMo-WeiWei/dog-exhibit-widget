@@ -296,11 +296,47 @@
     .nav-prev { left: -14px; }
     .nav-next { right: -14px; }
 
-    /* 3D 翻轉卡片容器 */
+    /* 3D 翻轉卡片容器 + 抽卡滑動動畫 */
     .card-scene {
       width: 100%;
       height: 515px;
       perspective: 1100px;
+    }
+
+    .card-scene.slide-out-left {
+      animation: cardDrawOutLeft 0.45s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+
+    @keyframes cardDrawOutLeft {
+      0% { opacity: 1; transform: translateX(0) rotate(0deg) scale(1); }
+      100% { opacity: 0; transform: translateX(-115%) rotate(-7deg) scale(0.95); }
+    }
+
+    .card-scene.slide-in-right {
+      animation: cardSlideInRight 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes cardSlideInRight {
+      0% { opacity: 0; transform: translateX(85px) rotate(3deg) scale(0.96); }
+      100% { opacity: 1; transform: translateX(0) rotate(0deg) scale(1); }
+    }
+
+    .card-scene.slide-out-right {
+      animation: cardDrawOutRight 0.45s cubic-bezier(0.32, 0.72, 0, 1) forwards;
+    }
+
+    @keyframes cardDrawOutRight {
+      0% { opacity: 1; transform: translateX(0) rotate(0deg) scale(1); }
+      100% { opacity: 0; transform: translateX(115%) rotate(7deg) scale(0.95); }
+    }
+
+    .card-scene.slide-in-left {
+      animation: cardSlideInLeft 0.52s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes cardSlideInLeft {
+      0% { opacity: 0; transform: translateX(-85px) rotate(-3deg) scale(0.96); }
+      100% { opacity: 1; transform: translateX(0) rotate(0deg) scale(1); }
     }
 
     .card-inner {
@@ -346,34 +382,43 @@
       pointer-events: none;
     }
 
+    /* 相框內部的照片框：改為完整顯示不裁切（contain），左右或上下留白自然呈現 */
     .card-front .photo-mat {
       position: relative;
       width: 100%;
       height: 228px;
-      background: #ece5da;
+      background: #f1ebe1;
       border-radius: 4px;
       border: 1px solid #e2d9cb;
-      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08);
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.06);
       overflow: hidden;
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
     }
 
     .card-front .photo-mat img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s ease;
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 3px;
+      box-shadow: 0 2px 8px rgba(62, 58, 54, 0.08);
+      transition: transform 0.35s ease;
     }
 
     .card-front:hover .photo-mat img {
-      transform: scale(1.03);
+      transform: scale(1.02);
     }
 
     .location-badge {
       position: absolute;
       top: 10px;
       left: 10px;
-      background: rgba(255, 253, 249, 0.92);
+      background: rgba(255, 253, 249, 0.94);
       color: var(--text-main);
       border: 1px solid #dfd5c5;
       font-size: 11.5px;
@@ -382,13 +427,14 @@
       padding: 3px 9px;
       border-radius: 4px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      z-index: 3;
     }
 
     .flip-trigger-badge {
       position: absolute;
       bottom: 10px;
       right: 10px;
-      background: rgba(255, 253, 249, 0.95);
+      background: rgba(255, 253, 249, 0.96);
       color: var(--primary);
       font-size: 11.5px;
       font-weight: 700;
@@ -398,6 +444,7 @@
       cursor: pointer;
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
       transition: transform 0.2s, background 0.2s, color 0.2s;
+      z-index: 3;
     }
 
     .flip-trigger-badge:hover {
@@ -665,7 +712,7 @@
   <div class="carousel-wrapper" id="carouselWrapper">
     <button class="nav-btn nav-prev" id="prevBtn" title="上一隻">❮</button>
     
-    <div class="card-scene">
+    <div class="card-scene" id="cardScene">
       <div class="card-inner" id="cardInner">
         <!-- 卡片正面（拍立得文青白框） -->
         <div class="card-face card-front">
@@ -737,12 +784,10 @@
   <script>
     // =========================================================================
     // 🐶【狗狗名單編輯區】已按你上傳圖片的 1 ~ 9 號順序排好！
-    // 你只要填入每隻狗狗的 `image`（照片網址）與 `officialUrl`（該隻狗狗詳細頁網址）
     // =========================================================================
     const FALLBACK_DOG_IMAGE = "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80";
 
     const DOGS_DATA = [
-      // 【第 1 張截圖】黑白哈士奇公犬｜臺北市動物之家｜VAAAG115112504
       {
         id: "img_01_ice",
         name: "冰塊",
@@ -750,16 +795,14 @@
         meta: "男生・哈士奇・黑白",
         category: "活力滿滿",
         tags: ["酷酷藍眼", "表情超豐富", "等家小帥哥"],
-        image: "https://www.pet.gov.tw/Upload/pic/1795587026270.png", // 👈 貼上第 1 張狗狗照片網址
+        image: "https://www.pet.gov.tw/Upload/pic/1795587026270.png",
         quote: "「我有一雙像冰塊一樣透亮的眼睛，雖然看起來有點酷，其實超想找人陪我玩！」",
         story: "嗨！我是冰塊，剛來到這裡報到。\n\n看著鐵籠外的世界，心裡其實有一點點緊張，也帶點好奇。我有一身黑白分明的帥氣毛色，還有讓人一眼就記住的眼神。\n\n如果你也喜歡有點個性、充滿活力的小夥伴，快來看看我吧！",
         shelterName: "臺北市動物之家（收容編號：VAAAG115112504）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&AcNum=VkFBQUcxMTUxMTI1MDQ=&UT=VkFBQUc=", // 👈 貼上第 1 張狗狗詳細頁網址
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&AcNum=VkFBQUcxMTUxMTI1MDQ=&UT=VkFBQUc=",
         initialPets: 18,
         initialTreat: 11
       },
-
-      // 【第 2 張截圖】白毛小幼犬母犬｜新北市瑞芳區公立動物之家｜AAAGG1151119002
       {
         id: "img_02_caramel",
         name: "牛奶糖",
@@ -767,16 +810,14 @@
         meta: "女生・混種幼犬・白毛",
         category: "親人撒嬌",
         tags: ["小奶音潛力股", "圓滾滾大眼", "軟綿綿白毛"],
-        image: "https://www.pet.gov.tw/Upload/pic/1795055989726.png", // 👈 貼上第 2 張狗狗照片網址
+        image: "https://www.pet.gov.tw/Upload/pic/1795055989726.png",
         quote: "「我像一顆香甜的牛奶糖，只要你輕輕抱我一下，心就會融化啦！」",
         story: "汪嗚～我是牛奶糖，是個白白淨淨的小女生。\n\n我還很小，世界對我來說什麼都好新鮮，看到人靠近就會忍不住歪著頭、睜大眼睛看著你。\n\n好希望能在長大的路上，遇見一個願意牽著我、教我好多事的溫暖家人。",
         shelterName: "新北市瑞芳區公立動物之家（收容編號：AAAGG1151119002）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=6&AcNum=QUFBR0cxMTUxMTE5MDAy&UT=QUFBR0c=", // 👈 貼上第 2 張狗狗詳細頁網址
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=6&AcNum=QUFBR0cxMTUxMTE5MDAy&UT=QUFBR0c=",
         initialPets: 29,
         initialTreat: 21
       },
-
-      // 【第 3 張截圖】黑黃毛小幼犬公犬｜新北市瑞芳區公立動物之家｜AAAGG1151119003
       {
         id: "img_03_brows",
         name: "小眉",
@@ -784,16 +825,14 @@
         meta: "男生・混種幼犬・黑黃",
         category: "親人撒嬌",
         tags: ["天然小眉毛", "乖巧坐姿", "迷你小可愛"],
-        image: "https://www.pet.gov.tw/Upload/pic/1795056402746.png", // 👈 貼上第 3 張狗狗照片網址
+        image: "https://www.pet.gov.tw/Upload/pic/1795056402746.png",
         quote: "「你看我頭上有兩顆可愛的小眉毛，是不是不管看哪邊都像在認真聽你說話？」",
         story: "你好呀！我是小眉，是一隻黑黑亮亮、腳腳帶點黃色的小男生。\n\n雖然年紀還小，但我很喜歡乖乖坐在原地，用圓圓的大眼睛望著你。\n\n如果你正在找一隻陪你一起生活的小萌犬，我已經準備好把全部的愛都給你囉！",
         shelterName: "新北市瑞芳區公立動物之家（收容編號：AAAGG1151119003）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=6&AcNum=QUFBR0cxMTUxMTE5MDAz&UT=QUFBR0c=", // 👈 貼上第 3 張狗狗詳細頁網址
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=6&AcNum=QUFBR0cxMTUxMTE5MDAz&UT=QUFBR0c=",
         initialPets: 22,
         initialTreat: 14
       },
-
-      // 【第 4 張截圖】黃毛混種公犬｜彰化縣流浪狗中途之家臨時收容所｜GAAAG1151117001
       {
         id: "img_04_amber",
         name: "琥珀",
@@ -801,16 +840,14 @@
         meta: "男生・混種犬・黃毛",
         category: "穩重乖巧",
         tags: ["暖陽黃毛", "文靜慢熟", "需要安全感"],
-        image: "https://www.pet.gov.tw/Upload/pic/1794880389422.png", // 👈 貼上第 4 張狗狗照片網址
+        image: "https://www.pet.gov.tw/Upload/pic/1794880389422.png",
         quote: "「我安靜地蜷縮在角落時，其實是在偷偷聽著外面有沒有熟悉、溫柔的腳步聲。」",
         story: "嗨，我是琥珀。我的毛色在陽光下像暖暖的琥珀一樣。\n\n在陌生環境裡，我比較慢熱、喜歡先觀察一下，但只要你用溫柔的語氣跟我說話，我就能感受到你的善意。\n\n給我一點時間熟悉你，我會成為你最安靜貼心的陪伴。",
         shelterName: "彰化縣流浪狗中途之家臨時收容所（收容編號：GAAAG1151117001）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=9&AcNum=R0FBQUcxMTUxMTE3MDAx&UT=R0FBQUc=", // 👈 貼上第 4 張狗狗詳細頁網址
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=9&AcNum=R0FBQUcxMTUxMTE3MDAx&UT=R0FBQUc=",
         initialPets: 16,
         initialTreat: 10
       },
-
-      // 【第 5 張截圖】立耳黃毛混種公犬｜南投縣公立動物收容所｜HAAAG1151113521
       {
         id: "img_05_tangerine",
         name: "阿橘",
@@ -818,16 +855,14 @@
         meta: "男生・混種犬・黃毛",
         category: "穩重乖巧",
         tags: ["大立耳超醒目", "沉穩可靠", "深情眼神"],
-        image: "https://www.pet.gov.tw/Upload/pic/1794628139250.png", // 👈 貼上第 5 張狗狗照片網址
+        image: "https://www.pet.gov.tw/Upload/pic/1794628139250.png",
         quote: "「我的大耳朵永遠豎得直直的，就像隨時都在幫你留意身邊的大小事！」",
         story: "大家好，我是阿橘，有著一身亮眼的橘黃色毛髮和一對超有精神的大耳朵。\n\n雖然待在籠子裡看起來很沉穩，但其實我心裡很渴望能有一個自己的家，不用再隔著欄杆看風景。\n\n如果你喜歡穩重又帶點深情的狗狗，歡迎來認識我！",
         shelterName: "南投縣公立動物收容所（收容編號：HAAAG1151113521）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=11&AcNum=SEFBQUcxMTUxMTEzNTIx&UT=SEFBQUc=", // 👈 貼上第 5 張狗狗詳細頁網址
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=11&AcNum=SEFBQUcxMTUxMTEzNTIx&UT=SEFBQUc=",
         initialPets: 20,
         initialTreat: 13
       },
-
-      // 【第 6 張截圖】黑毛側臉混種公犬｜宜蘭縣流浪動物中途之家｜1151940
       {
         id: "img_06_ink",
         name: "墨墨",
@@ -835,16 +870,14 @@
         meta: "男生・混種犬・黑毛",
         category: "穩重乖巧",
         tags: ["側臉超有型", "專注凝視", "低調暖男"],
-        image: "https://www.pet.gov.tw/Upload/pic/1794557081382.png", // 👈 貼上第 6 張狗狗照片網址
+        image: "https://www.pet.gov.tw/Upload/pic/1794557081382.png",
         quote: "「我像一幅水墨畫，安靜地看著遠方，心裡默默許願能有一個屬於我的家。」",
         story: "嗨！我是墨墨，一身黑亮的毛色是我最自然的衣裳。\n\n我喜歡靜靜地望著窗外，眼神裡藏著對自由與陪伴的期待。黑狗常常被忽略，但我相信只要你願意靠近，就會發現我其實很溫柔。\n\n希望有一天，我也能走進你的生活裡。",
         shelterName: "宜蘭縣流浪動物中途之家（收容編號：1151940）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=11&AcNum=MTE1MTk0MA==&UT=QkFBQUc=", // 👈 貼上第 6 張狗狗詳細頁網址
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=11&AcNum=MTE1MTk0MA==&UT=QkFBQUc=",
         initialPets: 19,
         initialTreat: 12
       },
-
-      // 【第 7 張截圖】白毛比熊犬母犬｜彰化縣流浪狗中途之家臨時收容所｜GAAAG11511110004
       {
         id: "img_07_cotton",
         name: "棉花球",
@@ -852,16 +885,14 @@
         meta: "女生・比熊犬・白毛",
         category: "親人撒嬌",
         tags: ["蓬鬆白雲朵", "愛被抱抱", "甜美小公主"],
-        image: "https://www.pet.gov.tw/Upload/pic/1794294176449.png", // 👈 貼上第 7 張狗狗照片網址
+        image: "https://www.pet.gov.tw/Upload/pic/1794294176449.png",
         quote: "「被抱在懷裡的感覺最棒了！我就是你身邊那團蓬鬆又軟綿綿的棉花球～」",
         story: "嗨～我是棉花球，是一隻蓬鬆白淨的小比熊女生。\n\n被人輕輕抱在懷裡的時候，我會覺得特別安心、特別幸福。我的毛澎澎圓圓的，看起來就像一朵會走路的小白雲。\n\n如果你想要一個天天黏著你、討抱抱的小甜心，別錯過我喔！",
         shelterName: "彰化縣流浪狗中途之家臨時收容所（收容編號：GAAAG11511110004）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=17&AcNum=R0FBQUcxMTUxMTEwMDA0&UT=R0FBQUc=", // 👈 貼上第 7 張狗狗詳細頁網址
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=17&AcNum=R0FBQUcxMTUxMTEwMDA0&UT=R0FBQUc=",
         initialPets: 37,
         initialTreat: 25
       },
-
-      // 【第 8 張截圖】黑棕毛小幼犬母犬｜臺東縣動物收容中心｜NAAAG1151103013
       {
         id: "img_08_redbean",
         name: "豆沙",
@@ -869,16 +900,14 @@
         meta: "女生・混種幼犬・黑棕",
         category: "活力滿滿",
         tags: ["黑棕雙色萌", "小步快跑", "勇敢小女生"],
-        image: "https://www.pet.gov.tw/Upload/pic/1793683724144.png", // 👈 貼上第 8 張狗狗照片網址
+        image: "https://www.pet.gov.tw/Upload/pic/1793683724144.png",
         quote: "「我小小的身體裡住著大大的夢想，好想跟你一起去海邊和草地探險！」",
         story: "汪！我是豆沙，有著棕褐色的臉龐與黑亮的小背影。\n\n雖然年紀還小，但我站得穩穩的，對這個世界充滿好奇與勇氣。\n\n如果能有一個溫暖的家讓我慢慢長大、陪你散步聊天，那一定會是我最棒的禮物！",
         shelterName: "臺東縣動物收容中心（收容編號：NAAAG1151103013）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=23&AcNum=TkFBQUcxMTUxMTAzMDEz&UT=TkFBQUc=", // 👈 貼上第 8 張狗狗詳細頁網址
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=23&AcNum=TkFBQUcxMTUxMTAzMDEz&UT=TkFBQUc=",
         initialPets: 21,
         initialTreat: 16
       },
-
-      // 【第 9 張截圖】黑毛小幼犬母犬｜臺東縣動物收容中心｜NAAAG1151103006
       {
         id: "img_09_charcoal",
         name: "小炭",
@@ -886,18 +915,17 @@
         meta: "女生・混種幼犬・黑毛",
         category: "親人撒嬌",
         tags: ["小黑炭幼犬", "乖巧坐姿", "等家小寶貝"],
-        image: "https://www.pet.gov.tw/Upload/pic/1793682595004.png", // 👈 貼上第 9 張狗狗照片網址
+        image: "https://www.pet.gov.tw/Upload/pic/1793682595004.png",
         quote: "「我是一顆還沒長大的小黑炭，只要一點點愛和陪伴，就會發出最暖的光！」",
         story: "嗨，我是小炭，是一隻黑毛毛、小巧可愛的女生幼犬。\n\n我乖乖坐在綠墊子上，用亮晶晶的眼睛看著你，心裡很希望能快點遇到願意疼愛我的家人。\n\n不管刮風下雨還是晴天，我都想一直陪在你身邊！",
         shelterName: "臺東縣動物收容中心（收容編號：NAAAG1151103006）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=23&AcNum=TkFBQUcxMTUxMTAzMDA2&UT=TkFBQUc=", // 👈 貼上第 9 張狗狗詳細頁網址
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=23&AcNum=TkFBQUcxMTUxMTAzMDA2&UT=TkFBQUc=",
         initialPets: 23,
         initialTreat: 15
       }
     ];
     // =========================================================================
 
-    // Web Audio API 可愛音效引擎
     let soundEnabled = true;
     let audioCtx = null;
 
@@ -1043,6 +1071,7 @@
     let currentIndex = 0;
     let isFlipped = false;
     let isTheaterPlaying = false;
+    let isTransitioning = false;
     let autoPlayTimer = null;
 
     const savedCounts = JSON.parse(localStorage.getItem("dog_carousel_counts_v2") || "{}");
@@ -1058,6 +1087,7 @@
       localStorage.setItem("dog_carousel_counts_v2", JSON.stringify(savedCounts));
     }
 
+    const cardScene = document.getElementById("cardScene");
     const cardInner = document.getElementById("cardInner");
     const dogLocation = document.getElementById("dogLocation");
     const dogImage = document.getElementById("dogImage");
@@ -1174,9 +1204,9 @@
       }
     });
 
-    function renderCard() {
+    function fillCardContent(targetIndex) {
       if (filteredDogs.length === 0) return;
-      const dog = filteredDogs[currentIndex];
+      const dog = filteredDogs[targetIndex];
       const counts = getCounts(dog);
 
       if (isFlipped) {
@@ -1202,17 +1232,51 @@
         ? dog.officialUrl
         : "https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt";
 
-      renderDots();
+      renderDots(targetIndex);
     }
 
-    function renderDots() {
+    function switchCardWithSlide(newIndex, direction = "next") {
+      if (filteredDogs.length <= 1) return;
+      if (isTransitioning) return;
+
+      const normalizedIndex = ((newIndex % filteredDogs.length) + filteredDogs.length) % filteredDogs.length;
+      if (normalizedIndex === currentIndex) return;
+
+      isTransitioning = true;
+
+      cardScene.classList.remove("slide-out-left", "slide-in-right", "slide-out-right", "slide-in-left");
+      void cardScene.offsetWidth;
+
+      const outClass = direction === "next" ? "slide-out-left" : "slide-out-right";
+      const inClass = direction === "next" ? "slide-in-right" : "slide-in-left";
+
+      cardScene.classList.add(outClass);
+
+      setTimeout(() => {
+        currentIndex = normalizedIndex;
+        fillCardContent(currentIndex);
+
+        cardScene.classList.remove(outClass);
+        void cardScene.offsetWidth;
+
+        cardScene.classList.add(inClass);
+
+        setTimeout(() => {
+          cardScene.classList.remove(inClass);
+          isTransitioning = false;
+        }, 520);
+      }, 420);
+    }
+
+    function renderDots(activeIdx = currentIndex) {
       dotsContainer.innerHTML = "";
       filteredDogs.forEach((_, idx) => {
         const dot = document.createElement("div");
-        dot.className = `dot ${idx === currentIndex ? "active" : ""}`;
+        dot.className = `dot ${idx === activeIdx ? "active" : ""}`;
         dot.addEventListener("click", () => {
-          currentIndex = idx;
-          renderCard();
+          if (idx === currentIndex) return;
+          const dir = idx > currentIndex ? "next" : "prev";
+          switchCardWithSlide(idx, dir);
           resetAutoPlay();
         });
         dotsContainer.appendChild(dot);
@@ -1300,13 +1364,11 @@
     });
 
     function nextSlide() {
-      currentIndex = (currentIndex + 1) % filteredDogs.length;
-      renderCard();
+      switchCardWithSlide(currentIndex + 1, "next");
     }
 
     function prevSlide() {
-      currentIndex = (currentIndex - 1 + filteredDogs.length) % filteredDogs.length;
-      renderCard();
+      switchCardWithSlide(currentIndex - 1, "prev");
     }
 
     document.getElementById("nextBtn").addEventListener("click", () => {
@@ -1321,6 +1383,7 @@
 
     document.querySelectorAll(".filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
+        if (isTransitioning) return;
         document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
 
@@ -1330,7 +1393,7 @@
           : DOGS_DATA.filter(d => d.category === currentFilter);
 
         currentIndex = 0;
-        renderCard();
+        fillCardContent(currentIndex);
         resetAutoPlay();
       });
     });
@@ -1338,17 +1401,17 @@
     function startAutoPlay() {
       if (autoPlayTimer) clearInterval(autoPlayTimer);
       autoPlayTimer = setInterval(() => {
-        if (!isFlipped && !isTheaterPlaying && filteredDogs.length > 1) {
+        if (!isFlipped && !isTheaterPlaying && !isTransitioning && filteredDogs.length > 1) {
           nextSlide();
         }
-      }, 4500);
+      }, 6000);
     }
 
     function resetAutoPlay() {
       startAutoPlay();
     }
 
-    renderCard();
+    fillCardContent(currentIndex);
     startAutoPlay();
   </script>
 </body>
