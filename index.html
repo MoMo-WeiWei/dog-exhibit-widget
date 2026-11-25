@@ -6,13 +6,12 @@
   <title>浪浪故事輪播牆｜等一個不放開的家</title>
   <style>
     :root {
-      /* 主色系設定：溫暖奶油米白 + 暖橘棕，非常適合嵌入 Notion 淺色模式 */
       --bg-color: #faf7f2;
       --card-bg: #ffffff;
-      --primary: #e07a5f;       /* 暖磚橘 */
+      --primary: #e07a5f;
       --primary-hover: #d06549;
-      --secondary: #f2cc8f;     /* 暖鵝黃 */
-      --text-main: #3d405b;     /* 深藍灰字體，柔和不刺眼 */
+      --secondary: #f2cc8f;
+      --text-main: #3d405b;
       --text-muted: #7a7d90;
       --tag-bg: #f4ece1;
       --shadow: 0 10px 25px rgba(61, 64, 91, 0.08);
@@ -26,6 +25,7 @@
     }
 
     body {
+      position: relative;
       background-color: var(--bg-color);
       color: var(--text-main);
       display: flex;
@@ -34,15 +34,238 @@
       justify-content: center;
       min-height: 100vh;
       padding: 16px;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
-    /* 頂部個性篩選列 */
-    .filter-bar {
+    /* 全螢幕特效層 */
+    .fx-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      overflow: hidden;
+    }
+
+    .screen-flash {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9990;
+      opacity: 0;
+    }
+
+    .screen-flash.pet-flash {
+      background: radial-gradient(circle at center, rgba(255, 143, 163, 0.24) 0%, rgba(255, 143, 163, 0) 72%);
+      animation: softPulse 0.9s ease-out forwards;
+    }
+
+    .screen-flash.treat-flash {
+      background: radial-gradient(circle at center, rgba(249, 199, 79, 0.26) 0%, rgba(249, 199, 79, 0) 72%);
+      animation: softPulse 0.9s ease-out forwards;
+    }
+
+    @keyframes softPulse {
+      0% { opacity: 0; transform: scale(0.95); }
+      35% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.05); }
+    }
+
+    /* 中央Q版小劇場舞台 */
+    .chibi-stage {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.7);
+      width: 300px;
+      height: 220px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 2.5px solid #f2dfd3;
+      border-radius: 28px;
+      box-shadow: 0 18px 40px rgba(61, 64, 91, 0.18);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 10001;
+      backdrop-filter: blur(8px);
+    }
+
+    .chibi-stage.show {
+      animation: stagePop 1.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes stagePop {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -42%) scale(0.72);
+      }
+      16% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.03);
+      }
+      24% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+      78% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -58%) scale(0.92);
+      }
+    }
+
+    .chibi-caption {
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+    }
+
+    /* Q版摸頭動畫 */
+    .chibi-hand-group {
+      transform-origin: 155px 52px;
+      animation: patHeadMotion 0.42s ease-in-out infinite alternate;
+    }
+
+    @keyframes patHeadMotion {
+      0% { transform: translate(0px, 0px) rotate(0deg); }
+      100% { transform: translate(-4px, 9px) rotate(-7deg); }
+    }
+
+    .chibi-dog-head {
+      transform-origin: 185px 115px;
+      animation: dogHappyBob 0.42s ease-in-out infinite alternate;
+    }
+
+    @keyframes dogHappyBob {
+      0% { transform: translateY(0px) rotate(0deg); }
+      100% { transform: translateY(3px) rotate(3deg); }
+    }
+
+    .chibi-tail {
+      transform-origin: 235px 128px;
+      animation: wagTailFast 0.22s ease-in-out infinite alternate;
+    }
+
+    @keyframes wagTailFast {
+      0% { transform: rotate(-16deg); }
+      100% { transform: rotate(18deg); }
+    }
+
+    .chibi-sparkle {
+      transform-origin: center;
+      animation: sparkleTwinkle 0.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes sparkleTwinkle {
+      0% { opacity: 0.35; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Q版罐罐開啟動畫 */
+    .can-lid {
+      transform-origin: 120px 82px;
+      animation: openLidAnim 1.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes openLidAnim {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+      }
+      28% {
+        transform: translate(24px, -36px) rotate(38deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(42px, -55px) rotate(55deg);
+        opacity: 0;
+      }
+    }
+
+    .can-food-puff {
+      opacity: 0;
+      transform-origin: 150px 95px;
+      animation: foodPopUp 1.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes foodPopUp {
+      0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.5);
+      }
+      30% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1.08);
+      }
+      75% {
+        opacity: 1;
+        transform: translateY(-18px) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-26px) scale(0.9);
+      }
+    }
+
+    .can-body {
+      animation: canBounce 0.55s ease-out;
+    }
+
+    @keyframes canBounce {
+      0% { transform: scaleY(0.88) scaleX(1.08); }
+      50% { transform: scaleY(1.05) scaleX(0.96); }
+      100% { transform: scaleY(1) scaleX(1); }
+    }
+
+    /* 全螢幕飄浮元素 */
+    .fx-item {
+      position: absolute;
+      bottom: -40px;
+      left: var(--x, 50%);
+      font-size: var(--size, 26px);
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1));
+      animation: riseAcrossScreen var(--dur, 1.85s) cubic-bezier(0.22, 0.85, 0.36, 1) forwards;
+      animation-delay: var(--delay, 0s);
+      opacity: 0;
+    }
+
+    @keyframes riseAcrossScreen {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, 10px) scale(0.4) rotate(0deg);
+      }
+      15% {
+        opacity: 1;
+        transform: translate(calc(-50% + var(--sway1, 15px)), -15vh) scale(1.15) rotate(var(--rot1, 12deg));
+      }
+      55% {
+        opacity: 1;
+        transform: translate(calc(-50% + var(--sway2, -18px)), -55vh) scale(1) rotate(var(--rot2, -15deg));
+      }
+      85% {
+        opacity: 0.9;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--sway3, 10px)), -105vh) scale(0.85) rotate(var(--rot3, 18deg));
+      }
+    }
+
+    /* 頂部個性篩選列與靜音開關 */
+    .top-controls {
+      position: relative;
+      z-index: 5;
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       justify-content: center;
+      align-items: center;
       margin-bottom: 18px;
     }
 
@@ -50,7 +273,7 @@
       background: var(--card-bg);
       border: 1.5px solid #e6dfd5;
       color: var(--text-main);
-      padding: 6px 14px;
+      padding: 6px 13px;
       border-radius: 20px;
       font-size: 13px;
       font-weight: 600;
@@ -70,9 +293,29 @@
       box-shadow: 0 4px 10px rgba(224, 122, 95, 0.3);
     }
 
+    .sound-toggle {
+      background: var(--card-bg);
+      border: 1.5px solid #e6dfd5;
+      color: var(--text-main);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .sound-toggle:hover {
+      border-color: var(--primary);
+    }
+
     /* 輪播主容器 */
     .carousel-wrapper {
       position: relative;
+      z-index: 5;
       width: 100%;
       max-width: 400px;
       display: flex;
@@ -80,7 +323,6 @@
       justify-content: center;
     }
 
-    /* 左右切換箭頭 */
     .nav-btn {
       position: absolute;
       top: 50%;
@@ -144,12 +386,11 @@
       flex-direction: column;
     }
 
-    /* 卡片正面 */
     .card-front .img-box {
       position: relative;
       width: 100%;
       height: 230px;
-      background: #eee;
+      background: #f2ece4;
     }
 
     .card-front .img-box img {
@@ -174,7 +415,7 @@
       position: absolute;
       bottom: 12px;
       right: 12px;
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.94);
       color: var(--primary);
       font-size: 12px;
       font-weight: 700;
@@ -183,7 +424,7 @@
       border: 1px solid var(--primary);
       cursor: pointer;
       box-shadow: 0 3px 8px rgba(0,0,0,0.12);
-      transition: transform 0.2s;
+      transition: transform 0.2s, background 0.2s, color 0.2s;
     }
 
     .flip-trigger-badge:hover {
@@ -245,7 +486,6 @@
       margin-bottom: 12px;
     }
 
-    /* 雲端摸頭 & 送罐罐互動區 */
     .interact-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -286,7 +526,7 @@
 
     .btn-treat:hover { background: #ffe8b3; }
 
-    /* 卡片背面（心聲與官方外連） */
+    /* 卡片背面 */
     .card-back {
       transform: rotateY(180deg);
       padding: 22px;
@@ -361,8 +601,9 @@
       transform: translateY(-1px);
     }
 
-    /* 底部圓點指示器 */
     .dots-container {
+      position: relative;
+      z-index: 5;
       display: flex;
       gap: 7px;
       margin-top: 14px;
@@ -382,40 +623,27 @@
       border-radius: 6px;
       background: var(--primary);
     }
-
-    /* 飄浮愛心與罐頭動畫 */
-    .floating-emoji {
-      position: fixed;
-      pointer-events: none;
-      font-size: 22px;
-      z-index: 9999;
-      animation: floatUp 1.1s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
-    }
-
-    @keyframes floatUp {
-      0% {
-        opacity: 1;
-        transform: translate(-50%, 0) scale(0.7) rotate(0deg);
-      }
-      50% {
-        opacity: 1;
-        transform: translate(calc(-50% + var(--drift)), -45px) scale(1.2) rotate(var(--rot));
-      }
-      100% {
-        opacity: 0;
-        transform: translate(calc(-50% + var(--drift)), -95px) scale(0.9) rotate(var(--rot));
-      }
-    }
   </style>
 </head>
 <body>
 
-  <!-- 個性篩選標籤列 -->
-  <div class="filter-bar" id="filterBar">
-    <button class="filter-btn active" data-filter="all">🐾 全部浪浪</button>
+  <!-- 全螢幕光暈與飄浮特效層 -->
+  <div class="screen-flash" id="screenFlash"></div>
+  <div class="fx-overlay" id="fxOverlay"></div>
+
+  <!-- 中央Q版小劇場動畫框 -->
+  <div class="chibi-stage" id="chibiStage">
+    <div id="chibiSceneContainer"></div>
+    <div class="chibi-caption" id="chibiCaption"></div>
+  </div>
+
+  <!-- 頂部篩選與音效開關 -->
+  <div class="top-controls" id="filterBar">
+    <button class="filter-btn active" data-filter="all">🐾 全部</button>
     <button class="filter-btn" data-filter="親人撒嬌">🥰 親人撒嬌</button>
     <button class="filter-btn" data-filter="穩重乖巧">🐶 穩重乖巧</button>
     <button class="filter-btn" data-filter="活力滿滿">⚡ 活力滿滿</button>
+    <button class="sound-toggle" id="soundToggleBtn" title="切換音效">🔊</button>
   </div>
 
   <!-- 輪播卡片區 -->
@@ -438,12 +666,9 @@
                 <span class="dog-meta" id="dogMeta">男生・中型犬・已結紮</span>
               </div>
               <div class="tags-row" id="dogTags"></div>
-              <div class="catchphrase" id="dogQuote">
-                「我每天都在籠子前面等，只要你願意停下來看我一眼，我就會對你搖尾巴！」
-              </div>
+              <div class="catchphrase" id="dogQuote"></div>
             </div>
 
-            <!-- 雲端摸頭與送罐罐 -->
             <div class="interact-row">
               <button class="action-btn btn-pet" id="petBtn">
                 🐾 雲端摸頭 <span id="petCount">12</span>
@@ -483,21 +708,23 @@
 
   <script>
     // =========================================================================
-    // 🐶【狗狗名單編輯區】未來想新增或修改狗狗，只要改這個陣列裡面的文字就好！
+    // 🐶【狗狗名單編輯區】
     // =========================================================================
+    const FALLBACK_DOG_IMAGE = "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80";
+
     const DOGS_DATA = [
       {
-        id: "dog_01", // 每隻狗請給一個不重複的代號（用來記憶摸頭與罐罐數量）
+        id: "dog_01",
         name: "阿福",
         location: "雲林縣",
         meta: "男生・中型米克斯・已絕育",
-        category: "親人撒嬌", // 對應上方的篩選按鈕：親人撒嬌 / 穩重乖巧 / 活力滿滿
+        category: "親人撒嬌",
         tags: ["超級愛笑", "會坐下握手", "不護食"],
-        image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80", // 換成收容所狗狗照片網址
+        image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80",
         quote: "「志工姊姊說我笑起來像太陽，希望有一天能成為你家專屬的小太陽！」",
         story: "嗨！我是阿福，來到這裡已經快半年了。\n\n剛進來的時候我很害怕，每天都縮在角落發抖。後來志工常常來跟我說話、摸摸我的頭，我才發現原來人類的手這麼溫暖。\n\n我散步不會暴衝，也很喜歡靠在人腳邊討摸摸，如果你願意給我一個家，我一定會用一輩子陪著你。",
         shelterName: "雲林縣流浪動物收容所（收容編號：113081502）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt", // 換成該隻狗狗在收容系統的專屬網址
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt",
         initialPets: 24,
         initialTreat: 15
       },
@@ -534,13 +761,164 @@
     ];
     // =========================================================================
 
+    // =========================================================================
+    // 🔊【Web Audio API 可愛音效引擎（免外部音檔）】
+    // =========================================================================
+    let soundEnabled = true;
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+      }
+      if (audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // 1. 雲端摸頭音效：暖暖豎琴雙音 + 可愛小狗撒嬌「汪嗚～」
+    function playPetSound() {
+      if (!soundEnabled) return;
+      const ctx = getAudioContext();
+      const now = ctx.currentTime;
+
+      // 暖心叮咚雙音 (C5 -> G5)
+      const notes = [523.25, 783.99];
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        const t = now + idx * 0.11;
+        osc.frequency.setValueAtTime(freq, t);
+
+        gain.gain.setValueAtTime(0.001, t);
+        gain.gain.exponentialRampToValueAtTime(0.16, t + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.55);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.58);
+      });
+
+      // 可愛小狗撒嬌聲 (滑音三角波模擬輕柔「汪嗚～」)
+      const barkTime = now + 0.26;
+      const barkOsc = ctx.createOscillator();
+      const barkGain = ctx.createGain();
+      barkOsc.type = "triangle";
+
+      barkOsc.frequency.setValueAtTime(420, barkTime);
+      barkOsc.frequency.exponentialRampToValueAtTime(640, barkTime + 0.09);
+      barkOsc.frequency.exponentialRampToValueAtTime(480, barkTime + 0.24);
+
+      barkGain.gain.setValueAtTime(0.001, barkTime);
+      barkGain.gain.exponentialRampToValueAtTime(0.18, barkTime + 0.04);
+      barkGain.gain.exponentialRampToValueAtTime(0.001, barkTime + 0.26);
+
+      barkOsc.connect(barkGain);
+      barkGain.connect(ctx.destination);
+      barkOsc.start(barkTime);
+      barkOsc.stop(barkTime + 0.28);
+    }
+
+    // 2. 送罐罐音效：金屬拉環「咔噠」+ 罐蓋「啵！」彈開 + 亮晶晶獎勵音
+    function playCanOpenSound() {
+      if (!soundEnabled) return;
+      const ctx = getAudioContext();
+      const now = ctx.currentTime;
+
+      // (A) 拉環預備音「咔」(高頻短促金屬敲擊)
+      const clickOsc = ctx.createOscillator();
+      const clickGain = ctx.createGain();
+      clickOsc.type = "square";
+      clickOsc.frequency.setValueAtTime(1650, now);
+      clickOsc.frequency.exponentialRampToValueAtTime(620, now + 0.045);
+
+      clickGain.gain.setValueAtTime(0.14, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+
+      clickOsc.connect(clickGain);
+      clickGain.connect(ctx.destination);
+      clickOsc.start(now);
+      clickOsc.stop(now + 0.055);
+
+      // (B) 罐蓋彈開「啵！」(氣壓釋放白噪音 + 清脆金屬共鳴)
+      const popTime = now + 0.09;
+      const bufferSize = Math.floor(ctx.sampleRate * 0.14);
+      const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.28));
+      }
+
+      const noiseSource = ctx.createBufferSource();
+      noiseSource.buffer = noiseBuffer;
+
+      const bandpass = ctx.createBiquadFilter();
+      bandpass.type = "bandpass";
+      bandpass.frequency.setValueAtTime(2200, popTime);
+      bandpass.Q.value = 2.5;
+
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0.45, popTime);
+      noiseGain.gain.exponentialRampToValueAtTime(0.01, popTime + 0.13);
+
+      noiseSource.connect(bandpass);
+      bandpass.connect(noiseGain);
+      noiseGain.connect(ctx.destination);
+      noiseSource.start(popTime);
+
+      // 搭配罐身清脆「叮～」金屬回音
+      const pingOsc = ctx.createOscillator();
+      const pingGain = ctx.createGain();
+      pingOsc.type = "sine";
+      pingOsc.frequency.setValueAtTime(1320, popTime);
+      pingOsc.frequency.exponentialRampToValueAtTime(1760, popTime + 0.08);
+
+      pingGain.gain.setValueAtTime(0.16, popTime);
+      pingGain.gain.exponentialRampToValueAtTime(0.001, popTime + 0.25);
+
+      pingOsc.connect(pingGain);
+      pingGain.connect(ctx.destination);
+      pingOsc.start(popTime);
+      pingOsc.stop(popTime + 0.26);
+
+      // (C) 美食登場「登登登✨」快樂三連音 (E5 -> G5 -> C6)
+      const chimeNotes = [659.25, 783.99, 1046.5];
+      chimeNotes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        const t = popTime + 0.14 + i * 0.085;
+        osc.frequency.setValueAtTime(freq, t);
+
+        gain.gain.setValueAtTime(0.001, t);
+        gain.gain.exponentialRampToValueAtTime(0.14, t + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t);
+        osc.stop(t + 0.38);
+      });
+    }
+
+    const soundToggleBtn = document.getElementById("soundToggleBtn");
+    soundToggleBtn.addEventListener("click", () => {
+      soundEnabled = !soundEnabled;
+      soundToggleBtn.textContent = soundEnabled ? "🔊" : "🔇";
+      soundToggleBtn.title = soundEnabled ? "音效已開啟（點擊靜音）" : "音效已靜音（點擊開啟）";
+    });
+    // =========================================================================
+
     let currentFilter = "all";
     let filteredDogs = [...DOGS_DATA];
     let currentIndex = 0;
     let isFlipped = false;
     let autoPlayTimer = null;
 
-    // 讀取或初始化本地按讚紀錄
     const savedCounts = JSON.parse(localStorage.getItem("dog_carousel_counts") || "{}");
 
     function getCounts(dog) {
@@ -554,7 +932,6 @@
       localStorage.setItem("dog_carousel_counts", JSON.stringify(savedCounts));
     }
 
-    // DOM 元素
     const cardInner = document.getElementById("cardInner");
     const dogLocation = document.getElementById("dogLocation");
     const dogImage = document.getElementById("dogImage");
@@ -569,33 +946,126 @@
     const shelterInfo = document.getElementById("shelterInfo");
     const officialLink = document.getElementById("officialLink");
     const dotsContainer = document.getElementById("dotsContainer");
+    const fxOverlay = document.getElementById("fxOverlay");
+    const screenFlash = document.getElementById("screenFlash");
+    const chibiStage = document.getElementById("chibiStage");
+    const chibiSceneContainer = document.getElementById("chibiSceneContainer");
+    const chibiCaption = document.getElementById("chibiCaption");
 
-    // 渲染目前狗狗卡片
+    // Q版摸頭小劇場 SVG
+    const CHIBI_PET_SVG = `
+      <svg width="240" height="165" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="140" cy="95" r="72" fill="#fff0eb" />
+        <g class="chibi-sparkle">
+          <path d="M185 32 L188 39 L195 42 L188 45 L185 52 L182 45 L175 42 L182 39 Z" fill="#ffb703" />
+          <path d="M238 56 C238 51, 245 51, 245 56 C245 51, 252 51, 252 56 C252 62, 245 66, 245 66 C245 66, 238 62, 238 56 Z" fill="#ff758f" />
+        </g>
+        <g class="chibi-tail">
+          <path d="M232 126 Q254 106 246 92" stroke="#d49a6a" stroke-width="8" stroke-linecap="round" fill="none" />
+        </g>
+        <ellipse cx="202" cy="134" rx="34" ry="24" fill="#e6b17e" stroke="#5c4033" stroke-width="3" />
+        <ellipse cx="196" cy="138" rx="20" ry="14" fill="#fff3e0" />
+        <rect x="172" y="148" width="12" height="14" rx="6" fill="#e6b17e" stroke="#5c4033" stroke-width="3" />
+        <rect x="204" y="148" width="12" height="14" rx="6" fill="#e6b17e" stroke="#5c4033" stroke-width="3" />
+        <g class="chibi-dog-head">
+          <ellipse cx="152" cy="108" rx="11" ry="20" transform="rotate(18 152 108)" fill="#c68652" stroke="#5c4033" stroke-width="3" />
+          <circle cx="184" cy="102" r="30" fill="#e6b17e" stroke="#5c4033" stroke-width="3" />
+          <ellipse cx="215" cy="106" rx="11" ry="19" transform="rotate(-16 215 106)" fill="#c68652" stroke="#5c4033" stroke-width="3" />
+          <ellipse cx="182" cy="110" rx="17" ry="13" fill="#fff3e0" />
+          <path d="M167 98 Q172 92 177 98" stroke="#5c4033" stroke-width="3" stroke-linecap="round" fill="none" />
+          <path d="M189 98 Q194 92 199 98" stroke="#5c4033" stroke-width="3" stroke-linecap="round" fill="none" />
+          <ellipse cx="164" cy="107" rx="6" ry="3.5" fill="#ff9ebb" opacity="0.75" />
+          <ellipse cx="201" cy="107" rx="6" ry="3.5" fill="#ff9ebb" opacity="0.75" />
+          <ellipse cx="182" cy="106" rx="4.5" ry="3.2" fill="#5c4033" />
+          <path d="M175 113 Q182 120 189 113" stroke="#5c4033" stroke-width="2.8" stroke-linecap="round" fill="none" />
+        </g>
+        <g>
+          <path d="M36 165 Q42 122 76 122 Q110 122 116 165 Z" fill="#e07a5f" stroke="#3d405b" stroke-width="3" />
+          <circle cx="76" cy="86" r="31" fill="#ffe0bd" stroke="#3d405b" stroke-width="3" />
+          <path d="M45 84 Q45 48 78 48 Q112 48 112 84 Q102 65 76 65 Q53 65 45 84 Z" fill="#4a3f55" stroke="#3d405b" stroke-width="3" />
+          <circle cx="76" cy="43" r="11" fill="#4a3f55" stroke="#3d405b" stroke-width="3" />
+          <circle cx="65" cy="89" r="3.5" fill="#3d405b" />
+          <circle cx="89" cy="89" r="3.5" fill="#3d405b" />
+          <path d="M71 99 Q76 105 82 99" stroke="#3d405b" stroke-width="2.8" stroke-linecap="round" fill="none" />
+          <ellipse cx="58" cy="96" rx="5" ry="3" fill="#ff9ebb" opacity="0.7" />
+          <ellipse cx="95" cy="96" rx="5" ry="3" fill="#ff9ebb" opacity="0.7" />
+        </g>
+        <g class="chibi-hand-group">
+          <path d="M106 130 Q138 92 168 72" stroke="#e07a5f" stroke-width="13" stroke-linecap="round" fill="none" />
+          <path d="M106 130 Q138 92 168 72" stroke="#3d405b" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.25" />
+          <ellipse cx="174" cy="69" rx="13" ry="9" transform="rotate(-18 174 69)" fill="#ffe0bd" stroke="#3d405b" stroke-width="3" />
+        </g>
+      </svg>
+    `;
+
+    // Q版罐罐開啟動畫 SVG
+    const CHIBI_CAN_SVG = `
+      <svg width="240" height="165" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="140" cy="100" r="72" fill="#fff8e6" />
+        <g class="can-food-puff">
+          <ellipse cx="122" cy="64" rx="14" ry="9" transform="rotate(-18 122 64)" fill="#e57373" stroke="#5c4033" stroke-width="2.5" />
+          <circle cx="118" cy="62" r="2.5" fill="#ffe0e0" />
+          <ellipse cx="158" cy="58" rx="13" ry="8.5" transform="rotate(15 158 58)" fill="#ef8a6c" stroke="#5c4033" stroke-width="2.5" />
+          <path d="M136 42 C136 37, 143 37, 143 42 C143 37, 150 37, 150 42 C150 48, 143 52, 143 52 C143 52, 136 48, 136 42 Z" fill="#ff6b8b" />
+          <path d="M184 44 L186 49 L191 51 L186 53 L184 58 L182 53 L177 51 L182 49 Z" fill="#ffb703" />
+          <path d="M96 50 L98 54 L102 56 L98 58 L96 62 L94 58 L90 56 L94 54 Z" fill="#ffb703" />
+        </g>
+        <g class="can-body">
+          <rect x="96" y="84" width="88" height="66" rx="12" fill="#ffd166" stroke="#3d405b" stroke-width="3" />
+          <rect x="96" y="102" width="88" height="28" fill="#fffdf7" stroke="#3d405b" stroke-width="2.5" />
+          <circle cx="124" cy="115" r="3.5" fill="#3d405b" />
+          <circle cx="156" cy="115" r="3.5" fill="#3d405b" />
+          <path d="M134 120 Q140 126 146 120" stroke="#3d405b" stroke-width="2.8" stroke-linecap="round" fill="none" />
+          <ellipse cx="116" cy="120" rx="5" ry="2.8" fill="#ff9ebb" opacity="0.75" />
+          <ellipse cx="164" cy="120" rx="5" ry="2.8" fill="#ff9ebb" opacity="0.75" />
+          <rect x="93" y="144" width="94" height="8" rx="4" fill="#e0a938" stroke="#3d405b" stroke-width="2.8" />
+        </g>
+        <g class="can-lid">
+          <ellipse cx="140" cy="82" rx="45" ry="9" fill="#cfd8dc" stroke="#3d405b" stroke-width="2.8" />
+          <circle cx="168" cy="79" r="6" fill="none" stroke="#3d405b" stroke-width="2.5" />
+        </g>
+      </svg>
+    `;
+
+    function playChibiTheater(type, dogNameText) {
+      const isPet = type === "pet";
+      chibiSceneContainer.innerHTML = isPet ? CHIBI_PET_SVG : CHIBI_CAN_SVG;
+      chibiCaption.textContent = isPet
+        ? `🤍 雲端摸摸 ${dogNameText} 的頭～好舒服呀！`
+        : `🥫 啵！幫 ${dogNameText} 打開香噴噴罐罐囉！`;
+
+      chibiStage.classList.remove("show");
+      void chibiStage.offsetWidth;
+      chibiStage.classList.add("show");
+    }
+
+    dogImage.addEventListener("error", () => {
+      if (dogImage.src !== FALLBACK_DOG_IMAGE) {
+        dogImage.src = FALLBACK_DOG_IMAGE;
+      }
+    });
+
     function renderCard() {
       if (filteredDogs.length === 0) return;
       const dog = filteredDogs[currentIndex];
       const counts = getCounts(dog);
 
-      // 切換狗狗時先翻回正面
       if (isFlipped) {
         isFlipped = false;
         cardInner.classList.remove("is-flipped");
       }
 
       dogLocation.textContent = `📍 ${dog.location}`;
-      dogImage.src = dog.image;
+      dogImage.alt = `${dog.name} 的照片`;
+      dogImage.src = dog.image || FALLBACK_DOG_IMAGE;
       dogName.textContent = dog.name;
       dogMeta.textContent = dog.meta;
       dogQuote.textContent = dog.quote;
-
-      // 標籤
       dogTags.innerHTML = dog.tags.map(t => `<span class="tag">#${t}</span>`).join("");
 
-      // 互動數字
       petCount.textContent = counts.pets;
       treatCount.textContent = counts.treats;
 
-      // 背面資料
       backTitle.textContent = `💌 ${dog.name}的悄悄話`;
       dogStory.textContent = dog.story;
       shelterInfo.textContent = `🏠 所在位置：${dog.shelterName}`;
@@ -604,7 +1074,6 @@
       renderDots();
     }
 
-    // 渲染底部圓點
     function renderDots() {
       dotsContainer.innerHTML = "";
       filteredDogs.forEach((_, idx) => {
@@ -618,52 +1087,73 @@
       });
     }
 
-    // 飄浮愛心 / 罐罐動畫產生器
-    function spawnFloatingEmojis(btnElement, emojis) {
-      const rect = btnElement.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const topY = rect.top;
+    function triggerFullScreenFx(type) {
+      const isPet = type === "pet";
+      const pool = isPet
+        ? ["💖", "🩷", "🐾", "✨", "🫶", "💕"]
+        : ["🥫", "🍖", "💛", "✨", "🦴", "💖"];
 
-      for (let i = 0; i < 4; i++) {
-        const span = document.createElement("span");
-        span.className = "floating-emoji";
-        span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        
-        // 隨機水平偏移與旋轉角度
-        const drift = (Math.random() - 0.5) * 70 + "px";
-        const rot = (Math.random() - 0.5) * 40 + "deg";
-        span.style.setProperty("--drift", drift);
-        span.style.setProperty("--rot", rot);
-        span.style.left = (centerX + (Math.random() - 0.5) * 30) + "px";
-        span.style.top = topY + "px";
-        span.style.animationDelay = (i * 0.08) + "s";
+      screenFlash.className = "screen-flash";
+      void screenFlash.offsetWidth;
+      screenFlash.classList.add(isPet ? "pet-flash" : "treat-flash");
 
-        document.body.appendChild(span);
-        setTimeout(() => span.remove(), 1200);
+      const total = 22;
+      for (let i = 0; i < total; i++) {
+        const el = document.createElement("div");
+        el.className = "fx-item";
+        el.textContent = pool[Math.floor(Math.random() * pool.length)];
+
+        const xPos = (5 + Math.random() * 90).toFixed(1) + "%";
+        const size = (20 + Math.random() * 18).toFixed(0) + "px";
+        const dur = (1.5 + Math.random() * 0.9).toFixed(2) + "s";
+        const delay = (Math.random() * 0.45).toFixed(2) + "s";
+
+        const sway1 = ((Math.random() - 0.5) * 60).toFixed(0) + "px";
+        const sway2 = ((Math.random() - 0.5) * 80).toFixed(0) + "px";
+        const sway3 = ((Math.random() - 0.5) * 70).toFixed(0) + "px";
+
+        const rot1 = ((Math.random() - 0.5) * 35).toFixed(0) + "deg";
+        const rot2 = ((Math.random() - 0.5) * 45).toFixed(0) + "deg";
+        const rot3 = ((Math.random() - 0.5) * 50).toFixed(0) + "deg";
+
+        el.style.setProperty("--x", xPos);
+        el.style.setProperty("--size", size);
+        el.style.setProperty("--dur", dur);
+        el.style.setProperty("--delay", delay);
+        el.style.setProperty("--sway1", sway1);
+        el.style.setProperty("--sway2", sway2);
+        el.style.setProperty("--sway3", sway3);
+        el.style.setProperty("--rot1", rot1);
+        el.style.setProperty("--rot2", rot2);
+        el.style.setProperty("--rot3", rot3);
+
+        fxOverlay.appendChild(el);
+        setTimeout(() => el.remove(), 2600);
       }
     }
 
-    // 按鈕事件：雲端摸頭
     document.getElementById("petBtn").addEventListener("click", function () {
       const dog = filteredDogs[currentIndex];
       const counts = getCounts(dog);
       counts.pets += 1;
       petCount.textContent = counts.pets;
       saveCounts();
-      spawnFloatingEmojis(this, ["❤️", "🐾", "🥰", "💕"]);
+      playPetSound();
+      playChibiTheater("pet", dog.name);
+      triggerFullScreenFx("pet");
     });
 
-    // 按鈕事件：送罐罐
     document.getElementById("treatBtn").addEventListener("click", function () {
       const dog = filteredDogs[currentIndex];
       const counts = getCounts(dog);
       counts.treats += 1;
       treatCount.textContent = counts.treats;
       saveCounts();
-      spawnFloatingEmojis(this, ["🥫", "🍖", "✨", "❤️"]);
+      playCanOpenSound();
+      playChibiTheater("treat", dog.name);
+      triggerFullScreenFx("treat");
     });
 
-    // 翻轉卡片控制
     document.getElementById("flipToBackBtn").addEventListener("click", () => {
       isFlipped = true;
       cardInner.classList.add("is-flipped");
@@ -674,7 +1164,6 @@
       cardInner.classList.remove("is-flipped");
     });
 
-    // 上一隻 / 下一隻
     function nextSlide() {
       currentIndex = (currentIndex + 1) % filteredDogs.length;
       renderCard();
@@ -688,30 +1177,28 @@
     document.getElementById("nextBtn").addEventListener("click", nextSlide);
     document.getElementById("prevBtn").addEventListener("click", prevSlide);
 
-    // 篩選按鈕事件
     document.querySelectorAll(".filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        
+
         currentFilter = btn.dataset.filter;
-        filteredDogs = currentFilter === "all" 
-          ? [...DOGS_DATA] 
+        filteredDogs = currentFilter === "all"
+          ? [...DOGS_DATA]
           : DOGS_DATA.filter(d => d.category === currentFilter);
-        
+
         currentIndex = 0;
         renderCard();
       });
     });
 
-    // 自動輪播控制（滑鼠懸停或卡片翻到背面時暫停輪播）
     function startAutoPlay() {
       stopAutoPlay();
       autoPlayTimer = setInterval(() => {
         if (!isFlipped && filteredDogs.length > 1) {
           nextSlide();
         }
-      }, 5000); // 每 5 秒自動切換一隻
+      }, 5000);
     }
 
     function stopAutoPlay() {
@@ -722,7 +1209,6 @@
     wrapper.addEventListener("mouseenter", stopAutoPlay);
     wrapper.addEventListener("mouseleave", startAutoPlay);
 
-    // 初始化
     renderCard();
     startAutoPlay();
   </script>
