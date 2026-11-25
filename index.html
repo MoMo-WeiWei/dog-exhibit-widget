@@ -6,15 +6,15 @@
   <title>浪浪故事輪播牆｜等一個不放開的家</title>
   <style>
     :root {
-      --bg-color: #faf7f2;
-      --card-bg: #ffffff;
-      --primary: #e07a5f;
-      --primary-hover: #d06549;
-      --secondary: #f2cc8f;
-      --text-main: #3d405b;
-      --text-muted: #7a7d90;
-      --tag-bg: #f4ece1;
-      --shadow: 0 10px 25px rgba(61, 64, 91, 0.08);
+      --bg-color: #f6f2eb;          /* 溫潤燕麥紙背景 */
+      --frame-bg: #fffdf9;          /* 拍立得暖白相紙 */
+      --primary: #c86d51;           /* 陶土暖橘 */
+      --primary-hover: #b3593e;
+      --secondary: #e2b879;         /* 麥穗暖黃 */
+      --text-main: #3e3a36;         /* 暖炭黑字體 */
+      --text-muted: #847c74;        /* 暖灰褐字體 */
+      --tag-bg: #f3ece1;
+      --shadow: 0 14px 32px rgba(62, 58, 54, 0.10), 0 2px 6px rgba(62, 58, 54, 0.05);
     }
 
     * {
@@ -33,7 +33,7 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      padding: 16px;
+      padding: 14px 16px;
       overflow: hidden;
     }
 
@@ -78,10 +78,10 @@
       transform: translate(-50%, -50%) scale(0.7);
       width: 300px;
       height: 220px;
-      background: rgba(255, 255, 255, 0.95);
-      border: 2.5px solid #f2dfd3;
-      border-radius: 28px;
-      box-shadow: 0 18px 40px rgba(61, 64, 91, 0.18);
+      background: rgba(255, 253, 249, 0.96);
+      border: 2px solid #eadfd2;
+      border-radius: 24px;
+      box-shadow: 0 18px 40px rgba(62, 58, 54, 0.18);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -97,25 +97,11 @@
     }
 
     @keyframes stagePop {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -42%) scale(0.72);
-      }
-      16% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1.03);
-      }
-      24% {
-        transform: translate(-50%, -50%) scale(1);
-      }
-      78% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -58%) scale(0.92);
-      }
+      0% { opacity: 0; transform: translate(-50%, -42%) scale(0.72); }
+      16% { opacity: 1; transform: translate(-50%, -50%) scale(1.03); }
+      24% { transform: translate(-50%, -50%) scale(1); }
+      78% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -58%) scale(0.92); }
     }
 
     .chibi-caption {
@@ -126,12 +112,11 @@
       letter-spacing: 0.5px;
     }
 
-    /* Q版摸頭動畫 */
+    /* Q版摸頭與開罐動畫 */
     .chibi-hand-group {
       transform-origin: 155px 52px;
       animation: patHeadMotion 0.42s ease-in-out infinite alternate;
     }
-
     @keyframes patHeadMotion {
       0% { transform: translate(0px, 0px) rotate(0deg); }
       100% { transform: translate(-4px, 9px) rotate(-7deg); }
@@ -141,7 +126,6 @@
       transform-origin: 185px 115px;
       animation: dogHappyBob 0.42s ease-in-out infinite alternate;
     }
-
     @keyframes dogHappyBob {
       0% { transform: translateY(0px) rotate(0deg); }
       100% { transform: translateY(3px) rotate(3deg); }
@@ -151,7 +135,6 @@
       transform-origin: 235px 128px;
       animation: wagTailFast 0.22s ease-in-out infinite alternate;
     }
-
     @keyframes wagTailFast {
       0% { transform: rotate(-16deg); }
       100% { transform: rotate(18deg); }
@@ -161,31 +144,19 @@
       transform-origin: center;
       animation: sparkleTwinkle 0.8s ease-in-out infinite alternate;
     }
-
     @keyframes sparkleTwinkle {
       0% { opacity: 0.35; transform: scale(0.8); }
       100% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* Q版罐罐開啟動畫 */
     .can-lid {
       transform-origin: 120px 82px;
       animation: openLidAnim 1.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
-
     @keyframes openLidAnim {
-      0% {
-        transform: translate(0, 0) rotate(0deg);
-        opacity: 1;
-      }
-      28% {
-        transform: translate(24px, -36px) rotate(38deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(42px, -55px) rotate(55deg);
-        opacity: 0;
-      }
+      0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+      28% { transform: translate(24px, -36px) rotate(38deg); opacity: 1; }
+      100% { transform: translate(42px, -55px) rotate(55deg); opacity: 0; }
     }
 
     .can-food-puff {
@@ -193,30 +164,16 @@
       transform-origin: 150px 95px;
       animation: foodPopUp 1.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
-
     @keyframes foodPopUp {
-      0% {
-        opacity: 0;
-        transform: translateY(10px) scale(0.5);
-      }
-      30% {
-        opacity: 1;
-        transform: translateY(-10px) scale(1.08);
-      }
-      75% {
-        opacity: 1;
-        transform: translateY(-18px) scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: translateY(-26px) scale(0.9);
-      }
+      0% { opacity: 0; transform: translateY(10px) scale(0.5); }
+      30% { opacity: 1; transform: translateY(-10px) scale(1.08); }
+      75% { opacity: 1; transform: translateY(-18px) scale(1); }
+      100% { opacity: 0; transform: translateY(-26px) scale(0.9); }
     }
 
     .can-body {
       animation: canBounce 0.55s ease-out;
     }
-
     @keyframes canBounce {
       0% { transform: scaleY(0.88) scaleX(1.08); }
       50% { transform: scaleY(1.05) scaleX(0.96); }
@@ -236,47 +193,34 @@
     }
 
     @keyframes riseAcrossScreen {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, 10px) scale(0.4) rotate(0deg);
-      }
-      15% {
-        opacity: 1;
-        transform: translate(calc(-50% + var(--sway1, 15px)), -15vh) scale(1.15) rotate(var(--rot1, 12deg));
-      }
-      55% {
-        opacity: 1;
-        transform: translate(calc(-50% + var(--sway2, -18px)), -55vh) scale(1) rotate(var(--rot2, -15deg));
-      }
-      85% {
-        opacity: 0.9;
-      }
-      100% {
-        opacity: 0;
-        transform: translate(calc(-50% + var(--sway3, 10px)), -105vh) scale(0.85) rotate(var(--rot3, 18deg));
-      }
+      0% { opacity: 0; transform: translate(-50%, 10px) scale(0.4) rotate(0deg); }
+      15% { opacity: 1; transform: translate(calc(-50% + var(--sway1, 15px)), -15vh) scale(1.15) rotate(var(--rot1, 12deg)); }
+      55% { opacity: 1; transform: translate(calc(-50% + var(--sway2, -18px)), -55vh) scale(1) rotate(var(--rot2, -15deg)); }
+      85% { opacity: 0.9; }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--sway3, 10px)), -105vh) scale(0.85) rotate(var(--rot3, 18deg)); }
     }
 
-    /* 頂部個性篩選列與靜音開關 */
+    /* 頂部篩選與音效開關 */
     .top-controls {
       position: relative;
       z-index: 5;
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       justify-content: center;
       align-items: center;
-      margin-bottom: 18px;
+      margin-bottom: 16px;
     }
 
     .filter-btn {
-      background: var(--card-bg);
-      border: 1.5px solid #e6dfd5;
+      background: var(--frame-bg);
+      border: 1px solid #dfd6c9;
       color: var(--text-main);
-      padding: 6px 13px;
+      padding: 5px 12px;
       border-radius: 20px;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
+      letter-spacing: 0.3px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -290,17 +234,17 @@
       background: var(--primary);
       border-color: var(--primary);
       color: #fff;
-      box-shadow: 0 4px 10px rgba(224, 122, 95, 0.3);
+      box-shadow: 0 3px 10px rgba(200, 109, 81, 0.28);
     }
 
     .sound-toggle {
-      background: var(--card-bg);
-      border: 1.5px solid #e6dfd5;
+      background: var(--frame-bg);
+      border: 1px solid #dfd6c9;
       color: var(--text-main);
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -317,7 +261,7 @@
       position: relative;
       z-index: 5;
       width: 100%;
-      max-width: 400px;
+      max-width: 390px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -325,21 +269,21 @@
 
     .nav-btn {
       position: absolute;
-      top: 50%;
+      top: 46%;
       transform: translateY(-50%);
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.92);
-      border: 1px solid #e6dfd5;
+      background: rgba(255, 253, 249, 0.95);
+      border: 1px solid #dfd6c9;
       color: var(--text-main);
-      font-size: 16px;
+      font-size: 14px;
       cursor: pointer;
       z-index: 10;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 4px 12px rgba(62, 58, 54, 0.1);
       transition: all 0.2s;
     }
 
@@ -349,14 +293,14 @@
       border-color: var(--primary);
     }
 
-    .nav-prev { left: -12px; }
-    .nav-next { right: -12px; }
+    .nav-prev { left: -14px; }
+    .nav-next { right: -14px; }
 
     /* 3D 翻轉卡片容器 */
     .card-scene {
       width: 100%;
-      height: 490px;
-      perspective: 1000px;
+      height: 515px;
+      perspective: 1100px;
     }
 
     .card-inner {
@@ -371,70 +315,99 @@
       transform: rotateY(180deg);
     }
 
+    /* 拍立得相紙外框質感 */
     .card-face {
       position: absolute;
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
-      background: var(--card-bg);
-      border-radius: 20px;
+      background: var(--frame-bg);
+      border-radius: 10px;
       box-shadow: var(--shadow);
-      border: 1px solid #efe9e0;
-      overflow: hidden;
+      border: 1px solid #e7dfd3;
+      padding: 15px 15px 16px 15px;
       display: flex;
       flex-direction: column;
     }
 
-    .card-front .img-box {
-      position: relative;
-      width: 100%;
-      height: 230px;
-      background: #f2ece4;
+    .washi-tape {
+      position: absolute;
+      top: -9px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1.5deg);
+      width: 88px;
+      height: 20px;
+      background: rgba(226, 184, 121, 0.45);
+      border-left: 1px dashed rgba(180, 140, 80, 0.35);
+      border-right: 1px dashed rgba(180, 140, 80, 0.35);
+      backdrop-filter: blur(2px);
+      z-index: 6;
+      pointer-events: none;
     }
 
-    .card-front .img-box img {
+    .card-front .photo-mat {
+      position: relative;
+      width: 100%;
+      height: 228px;
+      background: #ece5da;
+      border-radius: 4px;
+      border: 1px solid #e2d9cb;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .card-front .photo-mat img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .card-front:hover .photo-mat img {
+      transform: scale(1.03);
     }
 
     .location-badge {
       position: absolute;
-      top: 12px;
-      left: 12px;
-      background: rgba(61, 64, 91, 0.82);
-      color: #fff;
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 12px;
-      backdrop-filter: blur(4px);
+      top: 10px;
+      left: 10px;
+      background: rgba(255, 253, 249, 0.92);
+      color: var(--text-main);
+      border: 1px solid #dfd5c5;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 3px 9px;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
 
     .flip-trigger-badge {
       position: absolute;
-      bottom: 12px;
-      right: 12px;
-      background: rgba(255, 255, 255, 0.94);
+      bottom: 10px;
+      right: 10px;
+      background: rgba(255, 253, 249, 0.95);
       color: var(--primary);
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
-      padding: 6px 12px;
-      border-radius: 20px;
+      padding: 5px 11px;
+      border-radius: 16px;
       border: 1px solid var(--primary);
       cursor: pointer;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
       transition: transform 0.2s, background 0.2s, color 0.2s;
     }
 
     .flip-trigger-badge:hover {
-      transform: scale(1.05);
+      transform: scale(1.04);
       background: var(--primary);
       color: #fff;
     }
 
     .card-body {
-      padding: 16px 20px;
+      padding-top: 13px;
       display: flex;
       flex-direction: column;
       flex: 1;
@@ -445,51 +418,55 @@
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      margin-bottom: 6px;
+      border-bottom: 1px dashed #e5ddd0;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .dog-name {
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 800;
       color: var(--text-main);
+      letter-spacing: 0.8px;
     }
 
     .dog-meta {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-muted);
+      letter-spacing: 0.2px;
     }
 
     .tags-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 10px;
+      gap: 5px;
+      margin-bottom: 8px;
     }
 
     .tag {
       background: var(--tag-bg);
-      color: #8c6239;
+      color: #7c6348;
       font-size: 11px;
       font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 8px;
+      padding: 2px 8px;
+      border-radius: 4px;
     }
 
     .catchphrase {
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.5;
       color: var(--text-main);
-      background: #fdfbf7;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border-left: 3px solid var(--secondary);
-      margin-bottom: 12px;
+      background: #f9f6f0;
+      padding: 8px 11px;
+      border-radius: 6px;
+      border-left: 2.5px solid var(--secondary);
+      margin-bottom: 10px;
     }
 
     .interact-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 9px;
     }
 
     .action-btn {
@@ -497,11 +474,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      padding: 9px 10px;
-      border-radius: 12px;
-      border: none;
-      font-size: 13px;
+      gap: 5px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      font-size: 12.5px;
       font-weight: 700;
       cursor: pointer;
       transition: transform 0.12s ease, background 0.2s;
@@ -509,75 +486,79 @@
     }
 
     .action-btn:active {
-      transform: scale(0.93);
+      transform: scale(0.94);
     }
 
     .btn-pet {
-      background: #ffe8e2;
-      color: #c95236;
+      background: #fae8e2;
+      border-color: #f0d2c8;
+      color: #b84c32;
     }
 
-    .btn-pet:hover { background: #ffd8ce; }
+    .btn-pet:hover { background: #f6dbd2; }
 
     .btn-treat {
-      background: #fff3d6;
-      color: #b57c14;
+      background: #fbf0d9;
+      border-color: #eedcb8;
+      color: #9e6b14;
     }
 
-    .btn-treat:hover { background: #ffe8b3; }
+    .btn-treat:hover { background: #f7e6c4; }
 
     /* 卡片背面 */
     .card-back {
       transform: rotateY(180deg);
-      padding: 22px;
+      padding: 20px;
       justify-content: space-between;
-      background: linear-gradient(180deg, #fffcf7 0%, #ffffff 100%);
+      background: linear-gradient(180deg, #fffdf9 0%, #faf6ef 100%);
     }
 
     .back-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px dashed #e0d6c8;
-      padding-bottom: 12px;
+      border-bottom: 1px dashed #dcd2c3;
+      padding-bottom: 10px;
     }
 
     .back-title {
-      font-size: 16px;
+      font-size: 15.5px;
       font-weight: 800;
       color: var(--primary);
+      letter-spacing: 0.5px;
     }
 
     .back-close-btn {
-      background: #f2ece4;
-      border: none;
-      padding: 5px 12px;
+      background: #f1eae0;
+      border: 1px solid #e2d8c9;
+      padding: 4px 11px;
       border-radius: 14px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       color: var(--text-main);
       cursor: pointer;
     }
 
-    .back-close-btn:hover { background: #e5dccf; }
+    .back-close-btn:hover { background: #e6ddd0; }
 
     .story-content {
       flex: 1;
       overflow-y: auto;
       padding: 14px 4px;
-      font-size: 14px;
-      line-height: 1.75;
+      font-size: 13.8px;
+      line-height: 1.8;
       color: var(--text-main);
       white-space: pre-line;
     }
 
     .shelter-info {
       background: var(--tag-bg);
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      color: #6b533b;
-      margin-bottom: 12px;
+      border: 1px solid #e6dccd;
+      padding: 9px 11px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      color: #6b5a47;
+      margin-bottom: 11px;
       line-height: 1.5;
     }
 
@@ -588,11 +569,12 @@
       background: var(--primary);
       color: #fff;
       text-decoration: none;
-      padding: 12px;
-      border-radius: 14px;
-      font-size: 14px;
+      padding: 11px;
+      border-radius: 8px;
+      font-size: 13.5px;
       font-weight: 700;
-      box-shadow: 0 4px 12px rgba(224, 122, 95, 0.35);
+      letter-spacing: 0.4px;
+      box-shadow: 0 4px 12px rgba(200, 109, 81, 0.28);
       transition: background 0.2s, transform 0.2s;
     }
 
@@ -601,27 +583,60 @@
       transform: translateY(-1px);
     }
 
-    .dots-container {
+    /* 底部圓點與「想看更多」按鈕 */
+    .footer-area {
       position: relative;
       z-index: 5;
       display: flex;
-      gap: 7px;
-      margin-top: 14px;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .dots-container {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: #d8cfc4;
+      background: #d5ccc0;
       cursor: pointer;
       transition: all 0.3s;
     }
 
     .dot.active {
-      width: 22px;
+      width: 20px;
       border-radius: 6px;
       background: var(--primary);
+    }
+
+    .see-more-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--frame-bg);
+      color: var(--text-main);
+      border: 1px solid #d8cec0;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 999px;
+      box-shadow: 0 2px 8px rgba(62, 58, 54, 0.06);
+      transition: all 0.2s ease;
+    }
+
+    .see-more-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-1px);
     }
   </style>
 </head>
@@ -652,18 +667,19 @@
     
     <div class="card-scene">
       <div class="card-inner" id="cardInner">
-        <!-- 卡片正面 -->
+        <!-- 卡片正面（拍立得文青白框） -->
         <div class="card-face card-front">
-          <div class="img-box">
-            <span class="location-badge" id="dogLocation">📍 雲林縣</span>
+          <div class="washi-tape"></div>
+          <div class="photo-mat">
+            <span class="location-badge" id="dogLocation">📍 臺北市</span>
             <img id="dogImage" src="" alt="狗狗照片" />
             <button class="flip-trigger-badge" id="flipToBackBtn">💌 聽聽牠的心聲</button>
           </div>
           <div class="card-body">
             <div>
               <div class="dog-header">
-                <span class="dog-name" id="dogName">小黃</span>
-                <span class="dog-meta" id="dogMeta">男生・中型犬・已結紮</span>
+                <span class="dog-name" id="dogName">冰塊</span>
+                <span class="dog-meta" id="dogMeta">男生・哈士奇・黑白</span>
               </div>
               <div class="tags-row" id="dogTags"></div>
               <div class="catchphrase" id="dogQuote"></div>
@@ -682,10 +698,11 @@
 
         <!-- 卡片背面 -->
         <div class="card-face card-back">
+          <div class="washi-tape"></div>
           <div>
             <div class="back-header">
-              <span class="back-title" id="backTitle">💌 小黃的悄悄話</span>
-              <button class="back-close-btn" id="flipToFrontBtn">↩ 返回照片</button>
+              <span class="back-title" id="backTitle">💌 冰塊的悄悄話</span>
+              <button class="back-close-btn" id="flipToFrontBtn">↩ 返回相片</button>
             </div>
             <div class="story-content" id="dogStory"></div>
           </div>
@@ -703,67 +720,184 @@
     <button class="nav-btn nav-next" id="nextBtn" title="下一隻">❯</button>
   </div>
 
-  <!-- 底部圓點 -->
-  <div class="dots-container" id="dotsContainer"></div>
+  <!-- 底部圓點與「想看更多」按鈕 -->
+  <div class="footer-area">
+    <div class="dots-container" id="dotsContainer"></div>
+    <a
+      href="https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="see-more-btn"
+      id="seeMoreBtn"
+    >
+      🔍 想看更多（前往收容系統主頁） ↗
+    </a>
+  </div>
 
   <script>
     // =========================================================================
-    // 🐶【狗狗名單編輯區】
+    // 🐶【狗狗名單編輯區】已按你上傳圖片的 1 ~ 9 號順序排好！
+    // 你只要填入每隻狗狗的 `image`（照片網址）與 `officialUrl`（該隻狗狗詳細頁網址）
     // =========================================================================
     const FALLBACK_DOG_IMAGE = "https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=800&q=80";
 
     const DOGS_DATA = [
+      // 【第 1 張截圖】黑白哈士奇公犬｜臺北市動物之家｜VAAAG115112504
       {
-        id: "dog_01",
-        name: "阿福",
-        location: "雲林縣",
-        meta: "男生・中型米克斯・已絕育",
-        category: "親人撒嬌",
-        tags: ["超級愛笑", "會坐下握手", "不護食"],
-        image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&w=800&q=80",
-        quote: "「志工姊姊說我笑起來像太陽，希望有一天能成為你家專屬的小太陽！」",
-        story: "嗨！我是阿福，來到這裡已經快半年了。\n\n剛進來的時候我很害怕，每天都縮在角落發抖。後來志工常常來跟我說話、摸摸我的頭，我才發現原來人類的手這麼溫暖。\n\n我散步不會暴衝，也很喜歡靠在人腳邊討摸摸，如果你願意給我一個家，我一定會用一輩子陪著你。",
-        shelterName: "雲林縣流浪動物收容所（收容編號：113081502）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt",
-        initialPets: 24,
-        initialTreat: 15
-      },
-      {
-        id: "dog_02",
-        name: "黑糖",
-        location: "臺中市",
-        meta: "女生・中大型歐告・已絕育",
-        category: "穩重乖巧",
-        tags: ["居家守護神", "定點大小便", "安靜不亂叫"],
-        image: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=800&q=80",
-        quote: "「雖然我全身黑嚕嚕的，在暗處看不太見，但我有一顆最亮、最忠心的心喔！」",
-        story: "大家好，我是黑糖。很多人經過籠子時，常常因為我是黑狗就走過去了，其實我真的很乖。\n\n我不會亂吠叫，也不會拆家，最喜歡安安靜靜趴在旁邊看你工作或看書。如果你喜歡安靜陪伴的感覺，我會是最棒的室友。",
-        shelterName: "臺中市動物之家后里園區（收容編號：113090211）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt",
-        initialPets: 31,
-        initialTreat: 19
-      },
-      {
-        id: "dog_03",
-        name: "麻糬",
-        location: "高雄市",
-        meta: "女生・小型混種犬・幼犬",
+        id: "img_01_ice",
+        name: "冰塊",
+        location: "臺北市",
+        meta: "男生・哈士奇・黑白",
         category: "活力滿滿",
-        tags: ["好奇寶寶", "喜歡玩球", "親狗也親人"],
-        image: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=800&q=80",
-        quote: "「世界這麼大，好想跟你一起去公園草地奔跑、聞聞每一朵小花！」",
-        story: "汪！我是麻糬，今年還沒滿一歲喔！\n\n我對什麼事都充滿好奇，看到球球就會開心得跳起來。雖然現在還在學習規矩，但我很聰明，只要有零食獎勵，我很快就能學會喔！快帶我回家一起長大吧！",
-        shelterName: "高雄市燕巢動物保護關愛園區（收容編號：113101205）",
-        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt",
-        initialPets: 42,
-        initialTreat: 28
+        tags: ["酷酷藍眼", "表情超豐富", "等家小帥哥"],
+        image: "https://www.pet.gov.tw/Upload/pic/1795587026270.png", // 👈 貼上第 1 張狗狗照片網址
+        quote: "「我有一雙像冰塊一樣透亮的眼睛，雖然看起來有點酷，其實超想找人陪我玩！」",
+        story: "嗨！我是冰塊，剛來到這裡報到。\n\n看著鐵籠外的世界，心裡其實有一點點緊張，也帶點好奇。我有一身黑白分明的帥氣毛色，還有讓人一眼就記住的眼神。\n\n如果你也喜歡有點個性、充滿活力的小夥伴，快來看看我吧！",
+        shelterName: "臺北市動物之家（收容編號：VAAAG115112504）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&AcNum=VkFBQUcxMTUxMTI1MDQ=&UT=VkFBQUc=", // 👈 貼上第 1 張狗狗詳細頁網址
+        initialPets: 18,
+        initialTreat: 11
+      },
+
+      // 【第 2 張截圖】白毛小幼犬母犬｜新北市瑞芳區公立動物之家｜AAAGG1151119002
+      {
+        id: "img_02_caramel",
+        name: "牛奶糖",
+        location: "新北市",
+        meta: "女生・混種幼犬・白毛",
+        category: "親人撒嬌",
+        tags: ["小奶音潛力股", "圓滾滾大眼", "軟綿綿白毛"],
+        image: "https://www.pet.gov.tw/Upload/pic/1795055989726.png", // 👈 貼上第 2 張狗狗照片網址
+        quote: "「我像一顆香甜的牛奶糖，只要你輕輕抱我一下，心就會融化啦！」",
+        story: "汪嗚～我是牛奶糖，是個白白淨淨的小女生。\n\n我還很小，世界對我來說什麼都好新鮮，看到人靠近就會忍不住歪著頭、睜大眼睛看著你。\n\n好希望能在長大的路上，遇見一個願意牽著我、教我好多事的溫暖家人。",
+        shelterName: "新北市瑞芳區公立動物之家（收容編號：AAAGG1151119002）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=6&AcNum=QUFBR0cxMTUxMTE5MDAy&UT=QUFBR0c=", // 👈 貼上第 2 張狗狗詳細頁網址
+        initialPets: 29,
+        initialTreat: 21
+      },
+
+      // 【第 3 張截圖】黑黃毛小幼犬公犬｜新北市瑞芳區公立動物之家｜AAAGG1151119003
+      {
+        id: "img_03_brows",
+        name: "小眉",
+        location: "新北市",
+        meta: "男生・混種幼犬・黑黃",
+        category: "親人撒嬌",
+        tags: ["天然小眉毛", "乖巧坐姿", "迷你小可愛"],
+        image: "https://www.pet.gov.tw/Upload/pic/1795056402746.png", // 👈 貼上第 3 張狗狗照片網址
+        quote: "「你看我頭上有兩顆可愛的小眉毛，是不是不管看哪邊都像在認真聽你說話？」",
+        story: "你好呀！我是小眉，是一隻黑黑亮亮、腳腳帶點黃色的小男生。\n\n雖然年紀還小，但我很喜歡乖乖坐在原地，用圓圓的大眼睛望著你。\n\n如果你正在找一隻陪你一起生活的小萌犬，我已經準備好把全部的愛都給你囉！",
+        shelterName: "新北市瑞芳區公立動物之家（收容編號：AAAGG1151119003）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=6&AcNum=QUFBR0cxMTUxMTE5MDAz&UT=QUFBR0c=", // 👈 貼上第 3 張狗狗詳細頁網址
+        initialPets: 22,
+        initialTreat: 14
+      },
+
+      // 【第 4 張截圖】黃毛混種公犬｜彰化縣流浪狗中途之家臨時收容所｜GAAAG1151117001
+      {
+        id: "img_04_amber",
+        name: "琥珀",
+        location: "彰化縣",
+        meta: "男生・混種犬・黃毛",
+        category: "穩重乖巧",
+        tags: ["暖陽黃毛", "文靜慢熟", "需要安全感"],
+        image: "https://www.pet.gov.tw/Upload/pic/1794880389422.png", // 👈 貼上第 4 張狗狗照片網址
+        quote: "「我安靜地蜷縮在角落時，其實是在偷偷聽著外面有沒有熟悉、溫柔的腳步聲。」",
+        story: "嗨，我是琥珀。我的毛色在陽光下像暖暖的琥珀一樣。\n\n在陌生環境裡，我比較慢熱、喜歡先觀察一下，但只要你用溫柔的語氣跟我說話，我就能感受到你的善意。\n\n給我一點時間熟悉你，我會成為你最安靜貼心的陪伴。",
+        shelterName: "彰化縣流浪狗中途之家臨時收容所（收容編號：GAAAG1151117001）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=9&AcNum=R0FBQUcxMTUxMTE3MDAx&UT=R0FBQUc=", // 👈 貼上第 4 張狗狗詳細頁網址
+        initialPets: 16,
+        initialTreat: 10
+      },
+
+      // 【第 5 張截圖】立耳黃毛混種公犬｜南投縣公立動物收容所｜HAAAG1151113521
+      {
+        id: "img_05_tangerine",
+        name: "阿橘",
+        location: "南投縣",
+        meta: "男生・混種犬・黃毛",
+        category: "穩重乖巧",
+        tags: ["大立耳超醒目", "沉穩可靠", "深情眼神"],
+        image: "https://www.pet.gov.tw/Upload/pic/1794628139250.png", // 👈 貼上第 5 張狗狗照片網址
+        quote: "「我的大耳朵永遠豎得直直的，就像隨時都在幫你留意身邊的大小事！」",
+        story: "大家好，我是阿橘，有著一身亮眼的橘黃色毛髮和一對超有精神的大耳朵。\n\n雖然待在籠子裡看起來很沉穩，但其實我心裡很渴望能有一個自己的家，不用再隔著欄杆看風景。\n\n如果你喜歡穩重又帶點深情的狗狗，歡迎來認識我！",
+        shelterName: "南投縣公立動物收容所（收容編號：HAAAG1151113521）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=11&AcNum=SEFBQUcxMTUxMTEzNTIx&UT=SEFBQUc=", // 👈 貼上第 5 張狗狗詳細頁網址
+        initialPets: 20,
+        initialTreat: 13
+      },
+
+      // 【第 6 張截圖】黑毛側臉混種公犬｜宜蘭縣流浪動物中途之家｜1151940
+      {
+        id: "img_06_ink",
+        name: "墨墨",
+        location: "宜蘭縣",
+        meta: "男生・混種犬・黑毛",
+        category: "穩重乖巧",
+        tags: ["側臉超有型", "專注凝視", "低調暖男"],
+        image: "https://www.pet.gov.tw/Upload/pic/1794557081382.png", // 👈 貼上第 6 張狗狗照片網址
+        quote: "「我像一幅水墨畫，安靜地看著遠方，心裡默默許願能有一個屬於我的家。」",
+        story: "嗨！我是墨墨，一身黑亮的毛色是我最自然的衣裳。\n\n我喜歡靜靜地望著窗外，眼神裡藏著對自由與陪伴的期待。黑狗常常被忽略，但我相信只要你願意靠近，就會發現我其實很溫柔。\n\n希望有一天，我也能走進你的生活裡。",
+        shelterName: "宜蘭縣流浪動物中途之家（收容編號：1151940）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=11&AcNum=MTE1MTk0MA==&UT=QkFBQUc=", // 👈 貼上第 6 張狗狗詳細頁網址
+        initialPets: 19,
+        initialTreat: 12
+      },
+
+      // 【第 7 張截圖】白毛比熊犬母犬｜彰化縣流浪狗中途之家臨時收容所｜GAAAG11511110004
+      {
+        id: "img_07_cotton",
+        name: "棉花球",
+        location: "彰化縣",
+        meta: "女生・比熊犬・白毛",
+        category: "親人撒嬌",
+        tags: ["蓬鬆白雲朵", "愛被抱抱", "甜美小公主"],
+        image: "https://www.pet.gov.tw/Upload/pic/1794294176449.png", // 👈 貼上第 7 張狗狗照片網址
+        quote: "「被抱在懷裡的感覺最棒了！我就是你身邊那團蓬鬆又軟綿綿的棉花球～」",
+        story: "嗨～我是棉花球，是一隻蓬鬆白淨的小比熊女生。\n\n被人輕輕抱在懷裡的時候，我會覺得特別安心、特別幸福。我的毛澎澎圓圓的，看起來就像一朵會走路的小白雲。\n\n如果你想要一個天天黏著你、討抱抱的小甜心，別錯過我喔！",
+        shelterName: "彰化縣流浪狗中途之家臨時收容所（收容編號：GAAAG11511110004）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=17&AcNum=R0FBQUcxMTUxMTEwMDA0&UT=R0FBQUc=", // 👈 貼上第 7 張狗狗詳細頁網址
+        initialPets: 37,
+        initialTreat: 25
+      },
+
+      // 【第 8 張截圖】黑棕毛小幼犬母犬｜臺東縣動物收容中心｜NAAAG1151103013
+      {
+        id: "img_08_redbean",
+        name: "豆沙",
+        location: "臺東縣",
+        meta: "女生・混種幼犬・黑棕",
+        category: "活力滿滿",
+        tags: ["黑棕雙色萌", "小步快跑", "勇敢小女生"],
+        image: "https://www.pet.gov.tw/Upload/pic/1793683724144.png", // 👈 貼上第 8 張狗狗照片網址
+        quote: "「我小小的身體裡住著大大的夢想，好想跟你一起去海邊和草地探險！」",
+        story: "汪！我是豆沙，有著棕褐色的臉龐與黑亮的小背影。\n\n雖然年紀還小，但我站得穩穩的，對這個世界充滿好奇與勇氣。\n\n如果能有一個溫暖的家讓我慢慢長大、陪你散步聊天，那一定會是我最棒的禮物！",
+        shelterName: "臺東縣動物收容中心（收容編號：NAAAG1151103013）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=23&AcNum=TkFBQUcxMTUxMTAzMDEz&UT=TkFBQUc=", // 👈 貼上第 8 張狗狗詳細頁網址
+        initialPets: 21,
+        initialTreat: 16
+      },
+
+      // 【第 9 張截圖】黑毛小幼犬母犬｜臺東縣動物收容中心｜NAAAG1151103006
+      {
+        id: "img_09_charcoal",
+        name: "小炭",
+        location: "臺東縣",
+        meta: "女生・混種幼犬・黑毛",
+        category: "親人撒嬌",
+        tags: ["小黑炭幼犬", "乖巧坐姿", "等家小寶貝"],
+        image: "https://www.pet.gov.tw/Upload/pic/1793682595004.png", // 👈 貼上第 9 張狗狗照片網址
+        quote: "「我是一顆還沒長大的小黑炭，只要一點點愛和陪伴，就會發出最暖的光！」",
+        story: "嗨，我是小炭，是一隻黑毛毛、小巧可愛的女生幼犬。\n\n我乖乖坐在綠墊子上，用亮晶晶的眼睛看著你，心裡很希望能快點遇到願意疼愛我的家人。\n\n不管刮風下雨還是晴天，我都想一直陪在你身邊！",
+        shelterName: "臺東縣動物收容中心（收容編號：NAAAG1151103006）",
+        officialUrl: "https://www.pet.gov.tw/AnimalApp/AnnounceSingle.aspx?PageType=Adopt&PG=23&AcNum=TkFBQUcxMTUxMTAzMDA2&UT=TkFBQUc=", // 👈 貼上第 9 張狗狗詳細頁網址
+        initialPets: 23,
+        initialTreat: 15
       }
     ];
     // =========================================================================
 
-    // =========================================================================
-    // 🔊【Web Audio API 可愛音效引擎（免外部音檔）】
-    // =========================================================================
+    // Web Audio API 可愛音效引擎
     let soundEnabled = true;
     let audioCtx = null;
 
@@ -778,13 +912,11 @@
       return audioCtx;
     }
 
-    // 1. 雲端摸頭音效：暖暖豎琴雙音 + 可愛小狗撒嬌「汪嗚～」
     function playPetSound() {
       if (!soundEnabled) return;
       const ctx = getAudioContext();
       const now = ctx.currentTime;
 
-      // 暖心叮咚雙音 (C5 -> G5)
       const notes = [523.25, 783.99];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
@@ -803,7 +935,6 @@
         osc.stop(t + 0.58);
       });
 
-      // 可愛小狗撒嬌聲 (滑音三角波模擬輕柔「汪嗚～」)
       const barkTime = now + 0.26;
       const barkOsc = ctx.createOscillator();
       const barkGain = ctx.createGain();
@@ -823,13 +954,11 @@
       barkOsc.stop(barkTime + 0.28);
     }
 
-    // 2. 送罐罐音效：金屬拉環「咔噠」+ 罐蓋「啵！」彈開 + 亮晶晶獎勵音
     function playCanOpenSound() {
       if (!soundEnabled) return;
       const ctx = getAudioContext();
       const now = ctx.currentTime;
 
-      // (A) 拉環預備音「咔」(高頻短促金屬敲擊)
       const clickOsc = ctx.createOscillator();
       const clickGain = ctx.createGain();
       clickOsc.type = "square";
@@ -844,7 +973,6 @@
       clickOsc.start(now);
       clickOsc.stop(now + 0.055);
 
-      // (B) 罐蓋彈開「啵！」(氣壓釋放白噪音 + 清脆金屬共鳴)
       const popTime = now + 0.09;
       const bufferSize = Math.floor(ctx.sampleRate * 0.14);
       const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
@@ -870,7 +998,6 @@
       noiseGain.connect(ctx.destination);
       noiseSource.start(popTime);
 
-      // 搭配罐身清脆「叮～」金屬回音
       const pingOsc = ctx.createOscillator();
       const pingGain = ctx.createGain();
       pingOsc.type = "sine";
@@ -885,7 +1012,6 @@
       pingOsc.start(popTime);
       pingOsc.stop(popTime + 0.26);
 
-      // (C) 美食登場「登登登✨」快樂三連音 (E5 -> G5 -> C6)
       const chimeNotes = [659.25, 783.99, 1046.5];
       chimeNotes.forEach((freq, i) => {
         const osc = ctx.createOscillator();
@@ -911,15 +1037,15 @@
       soundToggleBtn.textContent = soundEnabled ? "🔊" : "🔇";
       soundToggleBtn.title = soundEnabled ? "音效已開啟（點擊靜音）" : "音效已靜音（點擊開啟）";
     });
-    // =========================================================================
 
     let currentFilter = "all";
     let filteredDogs = [...DOGS_DATA];
     let currentIndex = 0;
     let isFlipped = false;
+    let isTheaterPlaying = false;
     let autoPlayTimer = null;
 
-    const savedCounts = JSON.parse(localStorage.getItem("dog_carousel_counts") || "{}");
+    const savedCounts = JSON.parse(localStorage.getItem("dog_carousel_counts_v2") || "{}");
 
     function getCounts(dog) {
       if (!savedCounts[dog.id]) {
@@ -929,7 +1055,7 @@
     }
 
     function saveCounts() {
-      localStorage.setItem("dog_carousel_counts", JSON.stringify(savedCounts));
+      localStorage.setItem("dog_carousel_counts_v2", JSON.stringify(savedCounts));
     }
 
     const cardInner = document.getElementById("cardInner");
@@ -952,7 +1078,6 @@
     const chibiSceneContainer = document.getElementById("chibiSceneContainer");
     const chibiCaption = document.getElementById("chibiCaption");
 
-    // Q版摸頭小劇場 SVG
     const CHIBI_PET_SVG = `
       <svg width="240" height="165" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
         <circle cx="140" cy="95" r="72" fill="#fff0eb" />
@@ -980,25 +1105,24 @@
           <path d="M175 113 Q182 120 189 113" stroke="#5c4033" stroke-width="2.8" stroke-linecap="round" fill="none" />
         </g>
         <g>
-          <path d="M36 165 Q42 122 76 122 Q110 122 116 165 Z" fill="#e07a5f" stroke="#3d405b" stroke-width="3" />
-          <circle cx="76" cy="86" r="31" fill="#ffe0bd" stroke="#3d405b" stroke-width="3" />
-          <path d="M45 84 Q45 48 78 48 Q112 48 112 84 Q102 65 76 65 Q53 65 45 84 Z" fill="#4a3f55" stroke="#3d405b" stroke-width="3" />
-          <circle cx="76" cy="43" r="11" fill="#4a3f55" stroke="#3d405b" stroke-width="3" />
-          <circle cx="65" cy="89" r="3.5" fill="#3d405b" />
-          <circle cx="89" cy="89" r="3.5" fill="#3d405b" />
-          <path d="M71 99 Q76 105 82 99" stroke="#3d405b" stroke-width="2.8" stroke-linecap="round" fill="none" />
+          <path d="M36 165 Q42 122 76 122 Q110 122 116 165 Z" fill="#c86d51" stroke="#3e3a36" stroke-width="3" />
+          <circle cx="76" cy="86" r="31" fill="#ffe0bd" stroke="#3e3a36" stroke-width="3" />
+          <path d="M45 84 Q45 48 78 48 Q112 48 112 84 Q102 65 76 65 Q53 65 45 84 Z" fill="#4a3f55" stroke="#3e3a36" stroke-width="3" />
+          <circle cx="76" cy="43" r="11" fill="#4a3f55" stroke="#3e3a36" stroke-width="3" />
+          <circle cx="65" cy="89" r="3.5" fill="#3e3a36" />
+          <circle cx="89" cy="89" r="3.5" fill="#3e3a36" />
+          <path d="M71 99 Q76 105 82 99" stroke="#3e3a36" stroke-width="2.8" stroke-linecap="round" fill="none" />
           <ellipse cx="58" cy="96" rx="5" ry="3" fill="#ff9ebb" opacity="0.7" />
           <ellipse cx="95" cy="96" rx="5" ry="3" fill="#ff9ebb" opacity="0.7" />
         </g>
         <g class="chibi-hand-group">
-          <path d="M106 130 Q138 92 168 72" stroke="#e07a5f" stroke-width="13" stroke-linecap="round" fill="none" />
-          <path d="M106 130 Q138 92 168 72" stroke="#3d405b" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.25" />
-          <ellipse cx="174" cy="69" rx="13" ry="9" transform="rotate(-18 174 69)" fill="#ffe0bd" stroke="#3d405b" stroke-width="3" />
+          <path d="M106 130 Q138 92 168 72" stroke="#c86d51" stroke-width="13" stroke-linecap="round" fill="none" />
+          <path d="M106 130 Q138 92 168 72" stroke="#3e3a36" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.25" />
+          <ellipse cx="174" cy="69" rx="13" ry="9" transform="rotate(-18 174 69)" fill="#ffe0bd" stroke="#3e3a36" stroke-width="3" />
         </g>
       </svg>
     `;
 
-    // Q版罐罐開啟動畫 SVG
     const CHIBI_CAN_SVG = `
       <svg width="240" height="165" viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
         <circle cx="140" cy="100" r="72" fill="#fff8e6" />
@@ -1011,23 +1135,24 @@
           <path d="M96 50 L98 54 L102 56 L98 58 L96 62 L94 58 L90 56 L94 54 Z" fill="#ffb703" />
         </g>
         <g class="can-body">
-          <rect x="96" y="84" width="88" height="66" rx="12" fill="#ffd166" stroke="#3d405b" stroke-width="3" />
-          <rect x="96" y="102" width="88" height="28" fill="#fffdf7" stroke="#3d405b" stroke-width="2.5" />
-          <circle cx="124" cy="115" r="3.5" fill="#3d405b" />
-          <circle cx="156" cy="115" r="3.5" fill="#3d405b" />
-          <path d="M134 120 Q140 126 146 120" stroke="#3d405b" stroke-width="2.8" stroke-linecap="round" fill="none" />
+          <rect x="96" y="84" width="88" height="66" rx="12" fill="#ffd166" stroke="#3e3a36" stroke-width="3" />
+          <rect x="96" y="102" width="88" height="28" fill="#fffdf7" stroke="#3e3a36" stroke-width="2.5" />
+          <circle cx="124" cy="115" r="3.5" fill="#3e3a36" />
+          <circle cx="156" cy="115" r="3.5" fill="#3e3a36" />
+          <path d="M134 120 Q140 126 146 120" stroke="#3e3a36" stroke-width="2.8" stroke-linecap="round" fill="none" />
           <ellipse cx="116" cy="120" rx="5" ry="2.8" fill="#ff9ebb" opacity="0.75" />
           <ellipse cx="164" cy="120" rx="5" ry="2.8" fill="#ff9ebb" opacity="0.75" />
-          <rect x="93" y="144" width="94" height="8" rx="4" fill="#e0a938" stroke="#3d405b" stroke-width="2.8" />
+          <rect x="93" y="144" width="94" height="8" rx="4" fill="#e0a938" stroke="#3e3a36" stroke-width="2.8" />
         </g>
         <g class="can-lid">
-          <ellipse cx="140" cy="82" rx="45" ry="9" fill="#cfd8dc" stroke="#3d405b" stroke-width="2.8" />
-          <circle cx="168" cy="79" r="6" fill="none" stroke="#3d405b" stroke-width="2.5" />
+          <ellipse cx="140" cy="82" rx="45" ry="9" fill="#cfd8dc" stroke="#3e3a36" stroke-width="2.8" />
+          <circle cx="168" cy="79" r="6" fill="none" stroke="#3e3a36" stroke-width="2.5" />
         </g>
       </svg>
     `;
 
     function playChibiTheater(type, dogNameText) {
+      isTheaterPlaying = true;
       const isPet = type === "pet";
       chibiSceneContainer.innerHTML = isPet ? CHIBI_PET_SVG : CHIBI_CAN_SVG;
       chibiCaption.textContent = isPet
@@ -1037,6 +1162,10 @@
       chibiStage.classList.remove("show");
       void chibiStage.offsetWidth;
       chibiStage.classList.add("show");
+
+      setTimeout(() => {
+        isTheaterPlaying = false;
+      }, 1700);
     }
 
     dogImage.addEventListener("error", () => {
@@ -1057,7 +1186,7 @@
 
       dogLocation.textContent = `📍 ${dog.location}`;
       dogImage.alt = `${dog.name} 的照片`;
-      dogImage.src = dog.image || FALLBACK_DOG_IMAGE;
+      dogImage.src = dog.image && dog.image.trim() !== "" ? dog.image : FALLBACK_DOG_IMAGE;
       dogName.textContent = dog.name;
       dogMeta.textContent = dog.meta;
       dogQuote.textContent = dog.quote;
@@ -1069,7 +1198,9 @@
       backTitle.textContent = `💌 ${dog.name}的悄悄話`;
       dogStory.textContent = dog.story;
       shelterInfo.textContent = `🏠 所在位置：${dog.shelterName}`;
-      officialLink.href = dog.officialUrl;
+      officialLink.href = dog.officialUrl && dog.officialUrl.trim() !== ""
+        ? dog.officialUrl
+        : "https://www.pet.gov.tw/AnimalApp/AnnounceMent.aspx?PageType=Adopt";
 
       renderDots();
     }
@@ -1082,6 +1213,7 @@
         dot.addEventListener("click", () => {
           currentIndex = idx;
           renderCard();
+          resetAutoPlay();
         });
         dotsContainer.appendChild(dot);
       });
@@ -1141,6 +1273,7 @@
       playPetSound();
       playChibiTheater("pet", dog.name);
       triggerFullScreenFx("pet");
+      resetAutoPlay();
     });
 
     document.getElementById("treatBtn").addEventListener("click", function () {
@@ -1152,6 +1285,7 @@
       playCanOpenSound();
       playChibiTheater("treat", dog.name);
       triggerFullScreenFx("treat");
+      resetAutoPlay();
     });
 
     document.getElementById("flipToBackBtn").addEventListener("click", () => {
@@ -1162,6 +1296,7 @@
     document.getElementById("flipToFrontBtn").addEventListener("click", () => {
       isFlipped = false;
       cardInner.classList.remove("is-flipped");
+      resetAutoPlay();
     });
 
     function nextSlide() {
@@ -1174,8 +1309,15 @@
       renderCard();
     }
 
-    document.getElementById("nextBtn").addEventListener("click", nextSlide);
-    document.getElementById("prevBtn").addEventListener("click", prevSlide);
+    document.getElementById("nextBtn").addEventListener("click", () => {
+      nextSlide();
+      resetAutoPlay();
+    });
+
+    document.getElementById("prevBtn").addEventListener("click", () => {
+      prevSlide();
+      resetAutoPlay();
+    });
 
     document.querySelectorAll(".filter-btn").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -1189,25 +1331,22 @@
 
         currentIndex = 0;
         renderCard();
+        resetAutoPlay();
       });
     });
 
     function startAutoPlay() {
-      stopAutoPlay();
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
       autoPlayTimer = setInterval(() => {
-        if (!isFlipped && filteredDogs.length > 1) {
+        if (!isFlipped && !isTheaterPlaying && filteredDogs.length > 1) {
           nextSlide();
         }
-      }, 5000);
+      }, 4500);
     }
 
-    function stopAutoPlay() {
-      if (autoPlayTimer) clearInterval(autoPlayTimer);
+    function resetAutoPlay() {
+      startAutoPlay();
     }
-
-    const wrapper = document.getElementById("carouselWrapper");
-    wrapper.addEventListener("mouseenter", stopAutoPlay);
-    wrapper.addEventListener("mouseleave", startAutoPlay);
 
     renderCard();
     startAutoPlay();
